@@ -8,39 +8,18 @@
 
     >
 
-    <LinearLayout
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_arrow_back"
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:layout_marginBottom="16dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-
-        >
-
-        <Button
-            android:id="@+id/arrow_back"
-            style="?android:attr/borderlessButtonStyle"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_margin="4dp"
-            android:backgroundTint="@color/white"
-            android:contentDescription="@string/arrow_back"
-            app:icon="@drawable/arrow_back"
-            app:iconPadding="@dimen/icon_to_text_distance"
-            app:iconTint="@color/Charcoal" />
-
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:padding="12dp"
-            android:text="@string/settings_button"
-            android:textColor="@color/Charcoal"
-            android:textSize="@dimen/text_size" />
-
-
-    </LinearLayout>
+        android:background="@color/white"
+        app:navigationIcon="@drawable/arrow_back"
+        app:title="@string/settings_button"
+        android:textSize="@dimen/text_size"
+        app:titleTextColor="@color/Charcoal"
+        app:contentInsetStartWithNavigation="0dp"
+        android:foreground="?attr/selectableItemBackground"
+        android:layout_marginBottom="24dp" />
 
 
     <androidx.appcompat.widget.SwitchCompat
