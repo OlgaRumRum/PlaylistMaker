@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+
+    >
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_arrow_back"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="@color/white"
+        app:navigationIcon="@drawable/arrow_back"
+        app:title="@string/settings_button"
+        android:textSize="@dimen/text_size"
+        app:titleTextColor="@color/Charcoal"
+        app:contentInsetStartWithNavigation="0dp"
+        android:foreground="?attr/selectableItemBackground"
+        android:layout_marginBottom="24dp" />
+
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/switch_compat"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_height"
+        android:layout_marginStart="@dimen/padding"
+        android:layout_marginEnd="6dp"
+        android:checked="false"
+        android:text="@string/dark_theme"
+        android:textColor="@color/black"
+        android:textSize="@dimen/item_text_size"
+
+        />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_height"
+        android:padding="@dimen/padding">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="start|center_vertical"
+            android:layout_weight="1"
+            android:text="@string/share_the_app"
+            android:textColor="@color/black"
+            android:textSize="@dimen/item_text_size" />
+
+        <ImageView
+            android:layout_width="@dimen/icon_size"
+            android:layout_height="@dimen/icon_size"
+            android:layout_gravity="end|center_vertical"
+            android:background="@color/white"
+            android:contentDescription="@string/share_the_app"
+            android:src="@drawable/share"
+
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_height"
+        android:padding="@dimen/padding">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="start|center_vertical"
+            android:layout_weight="1"
+            android:text="@string/write_to_support"
+            android:textColor="@color/black"
+            android:textSize="@dimen/item_text_size" />
+
+        <ImageView
+            android:layout_width="@dimen/icon_size"
+            android:layout_height="@dimen/icon_size"
+            android:layout_gravity="end|center_vertical"
+            android:background="@color/white"
+            android:contentDescription="@string/write_to_support"
+            android:src="@drawable/support" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_height"
+        android:padding="@dimen/padding">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="start|center_vertical"
+            android:layout_weight="1"
+            android:text="@string/user_agreement"
+            android:textColor="@color/black"
+            android:textSize="@dimen/item_text_size" />
+
+        <ImageView
+            android:layout_width="@dimen/icon_size"
+            android:layout_height="@dimen/icon_size"
+            android:layout_gravity="end|center_vertical"
+            android:background="@color/white"
+            android:contentDescription="@string/arrow_forward"
+            android:src="@drawable/arrow_forward" />
+    </LinearLayout>
+
+</LinearLayout>

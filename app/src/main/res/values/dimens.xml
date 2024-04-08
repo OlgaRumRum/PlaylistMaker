@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="primary_text_size">22sp</dimen>
+    <dimen name="corner_radius">10dp</dimen>
+    <dimen name="text_size">22sp</dimen>
+    <dimen name="icon_to_text_distance">8dp</dimen>
+    <dimen name="item_height">64dp</dimen>
+    <dimen name="padding">16dp</dimen>
+    <dimen name="item_text_size">16sp</dimen>
+    <dimen name="icon_size">24sp</dimen>
+</resources>
