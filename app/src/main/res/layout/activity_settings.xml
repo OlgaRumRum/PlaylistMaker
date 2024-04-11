@@ -12,14 +12,14 @@
         android:id="@+id/toolbar_arrow_back"
         android:layout_width="match_parent"
         android:layout_height="56dp"
+        android:layout_marginBottom="24dp"
         android:background="@color/white"
+        android:foreground="?attr/selectableItemBackground"
+        android:textSize="@dimen/text_size"
+        app:contentInsetStartWithNavigation="0dp"
         app:navigationIcon="@drawable/arrow_back"
         app:title="@string/settings_button"
-        android:textSize="@dimen/text_size"
-        app:titleTextColor="@color/Charcoal"
-        app:contentInsetStartWithNavigation="0dp"
-        android:foreground="?attr/selectableItemBackground"
-        android:layout_marginBottom="24dp" />
+        app:titleTextColor="@color/Charcoal" />
 
 
     <androidx.appcompat.widget.SwitchCompat
@@ -36,75 +36,43 @@
         />
 
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/share_the_app"
         android:layout_width="match_parent"
         android:layout_height="@dimen/item_height"
-        android:padding="@dimen/padding">
+        android:layout_gravity="center_vertical"
+        android:backgroundTint="@color/white"
+        android:padding="@dimen/padding"
+        android:text="@string/share_the_app"
+        android:textColor="@color/black"
+        android:textSize="@dimen/item_text_size"
+        app:drawableRightCompat="@drawable/share" />
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="start|center_vertical"
-            android:layout_weight="1"
-            android:text="@string/share_the_app"
-            android:textColor="@color/black"
-            android:textSize="@dimen/item_text_size" />
 
-        <ImageView
-            android:layout_width="@dimen/icon_size"
-            android:layout_height="@dimen/icon_size"
-            android:layout_gravity="end|center_vertical"
-            android:background="@color/white"
-            android:contentDescription="@string/share_the_app"
-            android:src="@drawable/share"
-
-            />
-    </LinearLayout>
-
-    <LinearLayout
+    <TextView
+        android:id="@+id/write_to_support"
         android:layout_width="match_parent"
         android:layout_height="@dimen/item_height"
-        android:padding="@dimen/padding">
+        android:layout_gravity="center_vertical"
+        android:backgroundTint="@color/white"
+        android:padding="@dimen/padding"
+        android:text="@string/write_to_support"
+        android:textColor="@color/black"
+        android:textSize="@dimen/item_text_size"
+        app:drawableRightCompat="@drawable/support" />
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="start|center_vertical"
-            android:layout_weight="1"
-            android:text="@string/write_to_support"
-            android:textColor="@color/black"
-            android:textSize="@dimen/item_text_size" />
 
-        <ImageView
-            android:layout_width="@dimen/icon_size"
-            android:layout_height="@dimen/icon_size"
-            android:layout_gravity="end|center_vertical"
-            android:background="@color/white"
-            android:contentDescription="@string/write_to_support"
-            android:src="@drawable/support" />
-    </LinearLayout>
-
-    <LinearLayout
+    <TextView
+        android:id="@+id/user_agreement"
         android:layout_width="match_parent"
         android:layout_height="@dimen/item_height"
-        android:padding="@dimen/padding">
+        android:layout_gravity="center_vertical"
+        android:backgroundTint="@color/white"
+        android:padding="@dimen/padding"
+        android:text="@string/user_agreement"
+        android:textColor="@color/black"
+        android:textSize="@dimen/item_text_size"
+        app:drawableRightCompat="@drawable/arrow_forward" />
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="start|center_vertical"
-            android:layout_weight="1"
-            android:text="@string/user_agreement"
-            android:textColor="@color/black"
-            android:textSize="@dimen/item_text_size" />
-
-        <ImageView
-            android:layout_width="@dimen/icon_size"
-            android:layout_height="@dimen/icon_size"
-            android:layout_gravity="end|center_vertical"
-            android:background="@color/white"
-            android:contentDescription="@string/arrow_forward"
-            android:src="@drawable/arrow_forward" />
-    </LinearLayout>
 
 </LinearLayout>
