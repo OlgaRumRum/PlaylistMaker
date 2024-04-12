@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="?attr/colorPrimary"
     android:orientation="vertical"
 
     >
@@ -13,13 +13,14 @@
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:layout_marginBottom="24dp"
-        android:background="@color/white"
+        android:background="?attr/colorPrimary"
         android:foreground="?attr/selectableItemBackground"
         android:textSize="@dimen/text_size"
         app:contentInsetStartWithNavigation="0dp"
         app:navigationIcon="@drawable/arrow_back"
         app:title="@string/settings_button"
-        app:titleTextColor="@color/Charcoal" />
+        app:titleTextColor="?attr/colorOnPrimary"
+        android:fontFamily="@font/ys_display_medium" />
 
 
     <androidx.appcompat.widget.SwitchCompat
@@ -30,49 +31,31 @@
         android:layout_marginEnd="6dp"
         android:checked="false"
         android:text="@string/dark_theme"
-        android:textColor="@color/black"
+        android:textColor="?attr/colorOnPrimary"
         android:textSize="@dimen/item_text_size"
-
+        android:fontFamily="@font/ys_display_regular"
         />
 
 
     <TextView
         android:id="@+id/share_the_app"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/item_height"
-        android:layout_gravity="center_vertical"
-        android:backgroundTint="@color/white"
-        android:padding="@dimen/padding"
         android:text="@string/share_the_app"
-        android:textColor="@color/black"
-        android:textSize="@dimen/item_text_size"
-        app:drawableRightCompat="@drawable/share" />
+        app:drawableRightCompat="@drawable/share"
+        style="@style/TextSettingsStyle" />
 
 
     <TextView
         android:id="@+id/write_to_support"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/item_height"
-        android:layout_gravity="center_vertical"
-        android:backgroundTint="@color/white"
-        android:padding="@dimen/padding"
         android:text="@string/write_to_support"
-        android:textColor="@color/black"
-        android:textSize="@dimen/item_text_size"
-        app:drawableRightCompat="@drawable/support" />
+        app:drawableRightCompat="@drawable/support"
+        style="@style/TextSettingsStyle" />
 
 
     <TextView
         android:id="@+id/user_agreement"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/item_height"
-        android:layout_gravity="center_vertical"
-        android:backgroundTint="@color/white"
-        android:padding="@dimen/padding"
         android:text="@string/user_agreement"
-        android:textColor="@color/black"
-        android:textSize="@dimen/item_text_size"
-        app:drawableRightCompat="@drawable/arrow_forward" />
+        app:drawableRightCompat="@drawable/arrow_forward"
+        style="@style/TextSettingsStyle" />
 
 
 </LinearLayout>
