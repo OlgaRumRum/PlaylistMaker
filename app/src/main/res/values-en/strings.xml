@@ -16,5 +16,6 @@
     <string name="subject_line">Message to the developers of the Playlist Maker app</string>
     <string name="context_of_the_message">Thanks to the developers for the cool app!</string>
     <string name="user_agreement_button">"https://yandex.ru/legal/practicum_offer/"</string>
+    <string name="clear_icon">Clear</string>
 
 </resources>

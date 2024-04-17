@@ -20,7 +20,7 @@
         <item name="colorOnPrimary">@color/Charcoal</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/white</item>
-        <item name="colorSecondaryVariant">@color/gray</item>
+        <item name="colorSecondaryVariant">@color/text_gray</item>
         <item name="colorOnSecondary">@color/black</item>
         <item name="toolbarNavigationButtonStyle">@style/TintedNavigation</item>
         <!-- Status bar color. -->
@@ -28,4 +28,18 @@
 
     </style>
 
+    <style name="Theme.PlaylistMakerSearch" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/white</item>
+        <item name="colorPrimaryVariant">@color/white</item>
+        <item name="colorOnPrimary">@color/Charcoal</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/lite_gray</item>
+        <item name="colorSecondaryVariant">@color/text_gray</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <item name="toolbarNavigationButtonStyle">@style/TintedNavigation</item>
+        <!-- Status bar color. -->
+        <!-- Customize your theme here. -->
+
+    </style>
 </resources>

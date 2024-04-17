@@ -14,19 +14,6 @@
         <!-- Customize your theme here. -->
     </style>
 
-    <style name="Theme.PlaylistMaker" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/Charcoal</item>
-        <item name="colorPrimaryVariant">@color/black</item>
-        <item name="colorOnPrimary">@color/white</item>
-        <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/white</item>
-        <item name="colorSecondaryVariant">@color/white</item>
-        <item name="colorOnSecondary">@color/black</item>
-        <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
-        <!-- Customize your theme here. -->
-    </style>
 
     <style name="Theme.PlaylistMakerSettings" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
@@ -41,4 +28,19 @@
         <!-- Status bar color. -->
         <!-- Customize your theme here. -->
     </style>
+
+    <style name="Theme.PlaylistMakerSearch" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/Charcoal</item>
+        <item name="colorPrimaryVariant">@color/black</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/white</item>
+        <item name="colorSecondaryVariant">@color/Charcoal</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <item name="toolbarNavigationButtonStyle">@style/TintedNavigation</item>
+        <!-- Status bar color. -->
+        <!-- Customize your theme here. -->
+    </style>
+
 </resources>

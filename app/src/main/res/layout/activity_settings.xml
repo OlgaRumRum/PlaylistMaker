@@ -10,17 +10,10 @@
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar_arrow_back"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
         android:layout_marginBottom="24dp"
-        android:background="?attr/colorPrimary"
-        android:foreground="?attr/selectableItemBackground"
-        android:textSize="@dimen/text_size"
-        app:contentInsetStartWithNavigation="0dp"
         app:navigationIcon="@drawable/arrow_back"
         app:title="@string/settings_button"
-        app:titleTextColor="?attr/colorOnPrimary"
-        android:fontFamily="@font/ys_display_medium" />
+        style="@style/ToolbarStyle" />
 
 
     <androidx.appcompat.widget.SwitchCompat
