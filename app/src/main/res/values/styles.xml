@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="ButtonMainStyle" parent="Widget.MaterialComponents.Button">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
+    <style name="ButtonMainStyle" parent="Widget.MaterialComponents.Button.UnelevatedButton">
         <item name="android:textSize">@dimen/text_size</item>
         <item name="android:textAllCaps">false</item>
         <item name="android:backgroundTint">?attr/colorOnPrimary</item>
@@ -25,8 +23,6 @@
     </style>
 
     <style name="TextSettingsStyle" parent="Widget.MaterialComponents.TextView">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">@dimen/item_height</item>
         <item name="android:textSize">@dimen/item_text_size</item>
         <item name="android:textColor">?attr/colorOnSecondary</item>
         <item name="android:padding">@dimen/padding</item>
@@ -36,8 +32,6 @@
     </style>
 
     <style name="ToolbarStyle">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">@dimen/toolbar_height</item>
         <item name="android:background">?attr/colorPrimary</item>
         <item name="android:foreground">?attr/selectableItemBackground</item>
         <item name="android:textSize">@dimen/text_size</item>

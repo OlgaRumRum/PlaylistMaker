@@ -13,6 +13,8 @@
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar_search"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toolbar_height"
         android:layout_marginBottom="@dimen/small_padding"
         app:navigationIcon="@drawable/arrow_back"
         app:title="@string/search_button"
@@ -30,7 +32,6 @@
             android:layout_width="match_parent"
             android:layout_height="36dp"
             android:hint="@string/search_button"
-            android:maxLength="5"
             android:maxLines="1"
             android:inputType="text"
             android:textColor="@color/black"
@@ -50,8 +51,8 @@
 
         <ImageView
             android:id="@+id/clearIcon"
-            android:layout_width="12dp"
-            android:layout_height="12dp"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
             android:layout_marginEnd="@dimen/small_padding"
             android:layout_gravity="center_vertical|end"
             android:src="@android:drawable/ic_menu_close_clear_cancel"

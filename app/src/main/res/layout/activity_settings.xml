@@ -10,6 +10,8 @@
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar_arrow_back"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toolbar_height"
         android:layout_marginBottom="24dp"
         app:navigationIcon="@drawable/arrow_back"
         app:title="@string/settings_button"
@@ -32,6 +34,8 @@
 
     <TextView
         android:id="@+id/share_the_app"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_height"
         android:text="@string/share_the_app"
         app:drawableRightCompat="@drawable/share"
         style="@style/TextSettingsStyle" />
@@ -39,6 +43,8 @@
 
     <TextView
         android:id="@+id/write_to_support"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_height"
         android:text="@string/write_to_support"
         app:drawableRightCompat="@drawable/support"
         style="@style/TextSettingsStyle" />
@@ -46,6 +52,8 @@
 
     <TextView
         android:id="@+id/user_agreement"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_height"
         android:text="@string/user_agreement"
         app:drawableRightCompat="@drawable/arrow_forward"
         style="@style/TextSettingsStyle" />

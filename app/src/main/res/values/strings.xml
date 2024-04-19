@@ -11,10 +11,11 @@
     <string name="arrow_back" translatable="false">Обратная стрелка</string>
     <string name="arrow_forward" translatable="false">Стрелка вперед</string>
     <string name="message_share">"https://practicum.yandex.ru/profile/android-developer/"</string>
-    <string name="email_address">olgatyurenkova1992@mail.com</string>
+    <string name="email_address">Olga.tyuren@yandex.ru</string>
     <string name="subject_line" translatable="false">Сообщение разработчикам и разработчицам приложения Playlist Maker</string>
     <string name="context_of_the_message" translatable="false">Спасибо разработчикам и разработчицам за крутое приложение!</string>
     <string name="user_agreement_button">"https://yandex.ru/legal/practicum_offer/"</string>
     <string name="clear_icon">Очистить</string>
+    <string name="practikum">Yandex Practucum</string>
 
 </resources>
