@@ -23,6 +23,9 @@
         <item name="colorSecondaryVariant">@color/text_gray</item>
         <item name="colorOnSecondary">@color/black</item>
         <item name="toolbarNavigationButtonStyle">@style/TintedNavigation</item>
+
+        <item name="thumbTint">@color/text_gray</item>
+        <item name="trackTint">@color/lite_gray</item>
         <!-- Status bar color. -->
         <!-- Customize your theme here. -->
 
