@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SwitchCompat
@@ -22,11 +23,15 @@ class SettingsActivity : AppCompatActivity() {
 
         val switchThemeDark = findViewById<SwitchCompat>(R.id.switch_compat)
         switchThemeDark.setOnClickListener {
-            if (switchThemeDark.isChecked)
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            else
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+            Toast.makeText(this@SettingsActivity, "Темная тема", Toast.LENGTH_SHORT).show()
         }
+
+        /*if (switchThemeDark.isChecked) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        }else{
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)}
+        recreate()
+         */
 
 
         val shareButton = findViewById<TextView>(R.id.share_the_app)

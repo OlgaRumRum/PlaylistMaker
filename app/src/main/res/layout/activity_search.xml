@@ -43,7 +43,7 @@
             android:drawableTint="?attr/colorSecondaryVariant"
             android:drawableStart="@drawable/small_icon_search"
             android:drawablePadding="@dimen/small_padding"
-            android:paddingStart="14dp"
+            android:paddingStart="12dp"
             android:paddingEnd="@dimen/small_padding"
             android:layout_gravity="center_vertical"
 
