@@ -44,7 +44,7 @@
             android:drawableStart="@drawable/small_icon_search"
             android:drawablePadding="@dimen/small_padding"
             android:paddingStart="12dp"
-            android:paddingEnd="@dimen/small_padding"
+            android:paddingEnd="40dp"
             android:layout_gravity="center_vertical"
 
             />
@@ -53,13 +53,12 @@
             android:id="@+id/clearIcon"
             android:layout_width="16dp"
             android:layout_height="16dp"
-            android:layout_marginEnd="@dimen/small_padding"
+            android:layout_marginEnd="12dp"
             android:layout_gravity="center_vertical|end"
             android:src="@android:drawable/ic_menu_close_clear_cancel"
             android:drawableTint="?attr/colorSecondaryVariant"
             android:visibility="gone"
             android:contentDescription="@string/clear_icon"
-
 
             />
     </FrameLayout>
