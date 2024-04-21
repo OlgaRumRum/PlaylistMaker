@@ -2,47 +2,20 @@
     <!-- Base application theme. -->
     <style name="Theme.PlaylistMakerMain" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/Dodger_Blue</item>
-        <item name="colorPrimaryVariant">@color/white</item>
-        <item name="colorOnPrimary">@color/white</item>
-        <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/white</item>
-        <item name="colorSecondaryVariant">@color/black</item>
-        <item name="colorOnSecondary">@color/Charcoal</item>
-        <!-- Status bar color. -->
-        <!-- Customize your theme here. -->
-    </style>
-
-    <style name="Theme.PlaylistMakerSettings" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/white</item>
-        <item name="colorPrimaryVariant">@color/white</item>
-        <item name="colorOnPrimary">@color/Charcoal</item>
-        <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/white</item>
-        <item name="colorSecondaryVariant">@color/text_gray</item>
-        <item name="colorOnSecondary">@color/black</item>
-        <item name="toolbarNavigationButtonStyle">@style/TintedNavigation</item>
-        <item name="colorControlActivated">@color/text_gray</item>
-
-
-        <!-- Status bar color. -->
-        <!-- Customize your theme here. -->
-
-    </style>
-
-    <style name="Theme.PlaylistMakerSearch" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/white</item>
+        <item name="colorPrimary">@color/blue</item>
         <item name="colorPrimaryVariant">@color/white</item>
         <item name="colorOnPrimary">@color/Charcoal</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/lite_gray</item>
-        <item name="colorSecondaryVariant">@color/text_gray</item>
-        <item name="colorOnSecondary">@color/black</item>
+        <item name="colorSecondaryVariant">@color/black</item>
+        <item name="colorOnSecondary">@color/text_gray</item>
+
         <item name="toolbarNavigationButtonStyle">@style/TintedNavigation</item>
+        <item name="colorControlActivated">@color/text_gray</item>
+
+        <item name="editTextColor">@color/text_gray</item>
         <!-- Status bar color. -->
         <!-- Customize your theme here. -->
-
     </style>
+
 </resources>
