@@ -9,6 +9,15 @@
     <string name="share_the_app">Share the app</string>
     <string name="write_to_support">Write to support</string>
     <string name="user_agreement">User agreement</string>
-    <string name="arrow_back">Arrow back</string>э
+    <string name="arrow_back">Arrow back</string>
     <string name="arrow_forward">Arrow forward</string>
+    <string name="message_share">"https://practicum.yandex.ru/profile/android-developer/"</string>
+    <string name="email_address">Olga.tyuren@yandex.ru</string>
+    <string name="subject_line">Message to the developers of the Playlist Maker app</string>
+    <string name="context_of_the_message">Thanks to the developers for the cool app!</string>
+    <string name="user_agreement_button">"https://yandex.ru/legal/practicum_offer/"</string>
+    <string name="clear_icon">Clear</string>
+    <string name="practikum">Yandex Practucum</string>
+
+
 </resources>

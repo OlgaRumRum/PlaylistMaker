@@ -1,8 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SearchActivity">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="?attr/colorPrimaryVariant"
+    android:orientation="vertical"
+    tools:context=".MainActivity"
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    >
+
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_search"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toolbar_height"
+        android:layout_marginBottom="@dimen/small_padding"
+        app:navigationIcon="@drawable/arrow_back"
+        app:title="@string/search_button"
+        style="@style/ToolbarStyle" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:layout_marginLeft="@dimen/padding"
+        android:layout_marginRight="@dimen/padding">
+
+
+        <EditText
+            android:id="@+id/inputEditText"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:hint="@string/search_button"
+            android:maxLines="1"
+            android:inputType="text"
+            android:textColor="@color/black"
+            android:textColorHint="?attr/editTextColor"
+            android:background="@drawable/rounded_edittext"
+            android:textCursorDrawable="@drawable/cursor"
+            android:autofillHints=""
+            android:fontFamily="@font/ys_display_regular"
+            android:drawableTint="?attr/editTextColor"
+            android:drawableStart="@drawable/small_icon_search"
+            android:drawablePadding="@dimen/small_padding"
+            android:paddingStart="12dp"
+            android:paddingEnd="40dp"
+            android:layout_gravity="center_vertical"
+
+            />
+
+        <ImageView
+            android:id="@+id/clearIcon"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_marginEnd="12dp"
+            android:layout_gravity="center_vertical|end"
+            android:src="@android:drawable/ic_menu_close_clear_cancel"
+            app:tint="?attr/editTextColor"
+            android:visibility="gone"
+            android:contentDescription="@string/clear_icon"
+
+            />
+    </FrameLayout>
+
+</LinearLayout>

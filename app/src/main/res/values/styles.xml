@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="ButtonMainStyle" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+        <item name="android:textSize">@dimen/text_size</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:backgroundTint">@color/white</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:foreground">?attr/selectableItemBackground</item>
+        <item name="android:textColor">@color/Charcoal</item>
+        <item name="iconTint">@color/Charcoal</item>
+        <item name="iconGravity">textStart</item>
+        <item name="iconPadding">@dimen/icon_to_text_distance</item>
+        <item name="cornerRadius">@dimen/corner_radius</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textFontWeight">500</item>
+        <item name="android:elevation">0dp</item>
+
+    </style>
+
+    <style name="TintedNavigation" parent="Widget.AppCompat.Toolbar.Button.Navigation">
+        <item name="tint">?attr/colorOnPrimary</item>
+    </style>
+
+    <style name="TextSettingsStyle" parent="Widget.MaterialComponents.TextView">
+        <item name="android:textSize">@dimen/item_text_size</item>
+        <item name="android:textColor">?attr/colorSecondaryVariant</item>
+        <item name="android:padding">@dimen/padding</item>
+        <item name="android:drawableTint">?attr/colorOnSecondary</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+    </style>
+
+    <style name="ToolbarStyle">
+        <item name="android:background">?attr/colorPrimaryVariant</item>
+        <item name="android:foreground">?attr/selectableItemBackground</item>
+        <item name="android:textSize">@dimen/text_size</item>
+        <item name="contentInsetStartWithNavigation">0dp</item>
+        <item name="titleTextColor">?attr/colorOnPrimary</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+    </style>
+
+</resources>
