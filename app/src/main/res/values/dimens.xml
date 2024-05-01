@@ -11,4 +11,10 @@
     <dimen name="small_icon_size">16dp</dimen>
     <dimen name="small_padding">8dp</dimen>
     <dimen name="toolbar_height">56dp</dimen>
+    <dimen name="artWorkUrl100_radius">2dp</dimen>
+    <dimen name="list_text_size">11sp</dimen>
+    <dimen name="artWork_size">45dp</dimen>
+    <dimen name="artWork_marginStart">13dp</dimen>
+    <dimen name="rvName_marginTop">14dp</dimen>
+    <dimen name="ivTrackArrowForward_marginEnd">19dp</dimen>
 </resources>
