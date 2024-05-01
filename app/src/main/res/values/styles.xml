@@ -43,7 +43,6 @@
     <style name="TextListSmallStyle" parent="Widget.MaterialComponents.TextView">
         <item name="android:textSize">@dimen/list_text_size</item>
         <item name="android:textColor">?attr/colorOnSecondary</item>
-        <item name="android:layout_gravity">center</item>
         <item name="android:fontFamily">@font/ys_display_regular</item>
         <item name="android:textFontWeight">400</item>
         <item name="android:maxLines">1</item>

@@ -37,15 +37,6 @@ class SettingsActivity : AppCompatActivity() {
             resources.configuration.uiMode and UI_MODE_NIGHT_MASK == UI_MODE_NIGHT_YES
 
 
-        /*
-                val switchThemeDark = findViewById<SwitchCompat>(R.id.switch_compat)
-                switchThemeDark.setOnClickListener {
-                    Toast.makeText(this@SettingsActivity, "Темная тема", Toast.LENGTH_SHORT).show()
-                }
-
-         */
-
-
         val shareButton = findViewById<TextView>(R.id.share_the_app)
         shareButton.setOnClickListener {
             val intent = Intent(Intent.ACTION_SEND)
