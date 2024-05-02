@@ -1,16 +1,19 @@
 package com.example.playlistmaker
 
+import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.res.Configuration.UI_MODE_NIGHT_MASK
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.net.Uri
 import android.os.Bundle
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SwitchCompat
 import androidx.appcompat.widget.Toolbar
 
 class SettingsActivity : AppCompatActivity() {
+    @SuppressLint("SuspiciousIndentation")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
@@ -21,17 +24,17 @@ class SettingsActivity : AppCompatActivity() {
             onBackPressedDispatcher.onBackPressed()
         }
 
-        val switchThemeDark = findViewById<SwitchCompat>(R.id.switch_compat)
-        switchThemeDark.setOnClickListener {
-            Toast.makeText(this@SettingsActivity, "Темная тема", Toast.LENGTH_SHORT).show()
-        }
 
-        /*if (switchThemeDark.isChecked) {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-        }else{
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)}
-        recreate()
-         */
+        val switchThemeDark = findViewById<SwitchCompat>(R.id.switch_compat)
+
+        switchThemeDark.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked)
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            else
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        }
+        switchThemeDark.isChecked =
+            resources.configuration.uiMode and UI_MODE_NIGHT_MASK == UI_MODE_NIGHT_YES
 
 
         val shareButton = findViewById<TextView>(R.id.share_the_app)
@@ -67,5 +70,6 @@ class SettingsActivity : AppCompatActivity() {
         }
 
     }
+
 
 }

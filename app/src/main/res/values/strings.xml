@@ -17,5 +17,9 @@
     <string name="user_agreement_button">"https://yandex.ru/legal/practicum_offer/"</string>
     <string name="clear_icon">Очистить</string>
     <string name="practikum">Yandex Practucum</string>
+    <string name="track_cover">Обложка трека</string>
+    <string name="track_name">Нет ответа</string>
+    <string name="artist_name">Без имени</string>
+    <string name="track_time">00:00</string>
 
 </resources>
