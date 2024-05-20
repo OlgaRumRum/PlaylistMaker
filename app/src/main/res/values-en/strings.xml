@@ -22,6 +22,10 @@
     <string name="track_name">No reply</string>
     <string name="artist_name">No name</string>
     <string name="track_time">00:00</string>
+    <string name="nothing_was_found">Nothing was found</string>
+    <string name="no_interrnet_conection"> Communication problems\n\nThe download failed. Check\ninternet connection</string>
+    <string name="refresh">Refresh</string>
+    <string name="Error">Error</string>
 
 
 </resources>

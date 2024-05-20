@@ -21,5 +21,10 @@
     <string name="track_name">Нет ответа</string>
     <string name="artist_name">Без имени</string>
     <string name="track_time">00:00</string>
+    <string name="nothing_was_found">Ничего не нашлось</string>
+    <string name="no_interrnet_conection"> Проблемы со связью\n\nЗагрузка не удалась.  Проверьте\nподключение к интернету</string>
+    <string name="refresh">Обновить</string>
+    <string name="Error">Ошибка</string>
+
 
 </resources>

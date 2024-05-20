@@ -17,4 +17,9 @@
     <dimen name="artWork_marginStart">13dp</dimen>
     <dimen name="rvName_marginTop">14dp</dimen>
     <dimen name="ivTrackArrowForward_marginEnd">19dp</dimen>
+    <dimen name="error_text_size">19sp</dimen>
+    <dimen name="refresh_text_size">14sp</dimen>
+    <dimen name="placeholder_button_corner_radius">54dp</dimen>
+    <dimen name="error_marginTop">102dp</dimen>
+
 </resources>
