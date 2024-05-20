@@ -13,6 +13,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import retrofit2.Call
 import retrofit2.Callback
@@ -158,12 +159,12 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun showMessage(status: StatusResponse) {
-        searchErrorMessage.visibility = View.VISIBLE
+        searchErrorMessage.isVisible = true
         tracks.clear()
         adapter.notifyDataSetChanged()
         when (status) {
             StatusResponse.SUCCESS -> {
-                searchErrorMessage.visibility = View.GONE
+                searchErrorMessage.isVisible = false
             }
 
             StatusResponse.EMPTY -> {
@@ -174,14 +175,12 @@ class SearchActivity : AppCompatActivity() {
             StatusResponse.ERROR -> {
                 searchErrorText.text = getString(R.string.no_interrnet_conection)
                 searchErrorImage.setImageResource(R.drawable.internet_error)
-                searchRefreshButton.visibility = View.VISIBLE
+                searchRefreshButton.isVisible = true
             }
         }
-
-
     }
 
     companion object {
-        const val INPUT = "INPUT"
+        private const val INPUT = "INPUT"
     }
 }
