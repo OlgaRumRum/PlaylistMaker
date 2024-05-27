@@ -118,5 +118,48 @@
 
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/SearchHistory"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/hintMessage"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/history_text_height"
+                android:layout_marginTop="24dp"
+                android:fontFamily="@font/ys_display_medium"
+                android:textSize="@dimen/error_text_size"
+                android:text="@string/You_were_looking_for"
+                android:textColor="?attr/colorOnPrimary"
+                android:gravity="center" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/historyList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:itemCount="3"
+                tools:listitem="@layout/track_item" />
+
+            <Button
+                android:id="@+id/buttonClearHistory"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:backgroundTint="?attr/colorOnPrimary"
+                app:cornerRadius="@dimen/placeholder_button_corner_radius"
+                android:shadowRadius="0"
+                android:text="@string/Clear_the_history"
+                android:fontFamily="@font/ys_display_medium"
+                android:textColor="?attr/colorPrimaryVariant"
+                android:textSize="@dimen/refresh_text_size"
+                android:textAllCaps="false" />
+
+        </LinearLayout>
+
     </FrameLayout>
 </LinearLayout>

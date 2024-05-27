@@ -20,8 +20,7 @@ class SettingsActivity : AppCompatActivity() {
             onBackPressedDispatcher.onBackPressed()
         }
 
-        val themeSwitcher = findViewById<SwitchMaterial>(R.id.themeSwitcher)
-
+        /*val themeSwitcher = findViewById<SwitchMaterial>(R.id.themeSwitcher)
         val sharedPrefs = getSharedPreferences(PLAYLIST_MAKER_PREFERENCES, MODE_PRIVATE)
         val darkTheme = sharedPrefs.getBoolean(THEME_KEY, false)
         themeSwitcher.isChecked = darkTheme
@@ -33,6 +32,19 @@ class SettingsActivity : AppCompatActivity() {
             editor.putBoolean(THEME_KEY, isChecked)
             editor.apply()
         }
+
+         */
+        val themeSwitcher = findViewById<SwitchMaterial>(R.id.themeSwitcher)
+        themeSwitcher.isChecked = (applicationContext as App).darkTheme
+        val sharedPrefs = getSharedPreferences(PLAYLIST_MAKER_PREFERENCES, MODE_PRIVATE)
+
+        themeSwitcher.setOnCheckedChangeListener { _, checked ->
+            (applicationContext as App).switchTheme(checked)
+            sharedPrefs.edit()
+                .putBoolean(THEME_KEY, checked)
+                .apply()
+        }
+
 
         val shareButton = findViewById<TextView>(R.id.share_the_app)
         shareButton.setOnClickListener {

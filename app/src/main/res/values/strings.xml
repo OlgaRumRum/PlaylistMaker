@@ -25,6 +25,8 @@
     <string name="no_interrnet_conection"> Проблемы со связью\n\nЗагрузка не удалась.  Проверьте\nподключение к интернету</string>
     <string name="refresh">Обновить</string>
     <string name="Error">Ошибка</string>
+    <string name="You_were_looking_for">Вы искали</string>
+    <string name="Clear_the_history">Очистить историю</string>
 
 
 </resources>

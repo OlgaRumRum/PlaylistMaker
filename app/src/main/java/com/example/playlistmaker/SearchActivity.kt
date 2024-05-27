@@ -1,5 +1,6 @@
 package com.example.playlistmaker
 
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -42,9 +43,16 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var searchRefreshButton: Button
     private lateinit var searchErrorMessage: LinearLayout
     private lateinit var inputEditText: EditText
+    private lateinit var hintMessage: TextView
+    private lateinit var historyList: RecyclerView
+    private lateinit var buttonClearHistory: Button
+
+    private lateinit var searchHistory: SearchHistory
 
     private val tracks = mutableListOf<Track>()
-    private val adapter = TrackAdapter(tracks)
+    private val adapter = TrackAdapter(tracks) { track ->
+        searchHistory.addToTrackHistory(track)
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,7 +66,7 @@ class SearchActivity : AppCompatActivity() {
         }
 
 
-        inputEditText = findViewById(R.id.inputEditText)
+
         val clearButton = findViewById<ImageView>(R.id.clearIcon)
 
         clearButton.setOnClickListener {
@@ -74,12 +82,33 @@ class SearchActivity : AppCompatActivity() {
         searchErrorText = findViewById(R.id.searchErrorText)
         searchRefreshButton = findViewById(R.id.searchRefreshButton)
         searchErrorMessage = findViewById(R.id.searchErrorMessage)
+        inputEditText = findViewById(R.id.inputEditText)
+        hintMessage = findViewById(R.id.hintMessage)
+        historyList = findViewById(R.id.historyList)
+        buttonClearHistory = findViewById(R.id.buttonClearHistory)
 
         searchList.adapter = adapter
+
+        searchHistory =
+            SearchHistory(getSharedPreferences(TRACKS_HISTORY_KEY, Context.MODE_PRIVATE))
+
+        historyList.adapter = adapter
 
 
         searchRefreshButton.setOnClickListener {
             search()
+        }
+
+        inputEditText.setOnFocusChangeListener { view, hasFocus ->
+            hintMessage.visibility = if (hasFocus && inputEditText.text.isEmpty()
+                && searchHistory.getTrackHistory().isNotEmpty()
+            ) View.VISIBLE
+            else View.GONE
+        }
+
+        buttonClearHistory.setOnClickListener {
+            searchHistory.clearTrackHistory()
+            hintMessage.isVisible = false
         }
 
 
@@ -90,6 +119,12 @@ class SearchActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 text = inputEditText.text.toString()
                 clearButton.visibility = clearButtonVisibility(s)
+                hintMessage.visibility = if (inputEditText.hasFocus() && s?.isEmpty() == true
+                    && searchHistory.getTrackHistory().isNotEmpty()
+                ) View.VISIBLE
+                else {
+                    View.GONE
+                }
             }
 
             override fun afterTextChanged(s: Editable?) {

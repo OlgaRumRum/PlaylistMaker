@@ -26,6 +26,8 @@
     <string name="no_interrnet_conection"> Communication problems\n\nThe download failed. Check\ninternet connection</string>
     <string name="refresh">Refresh</string>
     <string name="Error">Error</string>
+    <string name="You_were_looking_for">You_were_looking_for</string>
+    <string name="Clear_the_history">Clear the history</string>
 
 
 </resources>

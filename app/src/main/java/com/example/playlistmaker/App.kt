@@ -9,7 +9,7 @@ const val THEME_KEY = "key_for_the_theme"
 
 class App : Application() {
 
-    private var darkTheme = false
+    var darkTheme = false
 
     override fun onCreate() {
         super.onCreate()
