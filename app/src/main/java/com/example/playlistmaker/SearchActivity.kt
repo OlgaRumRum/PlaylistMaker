@@ -1,6 +1,6 @@
 package com.example.playlistmaker
 
-import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -12,9 +12,11 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.isVisible
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import retrofit2.Call
 import retrofit2.Callback
@@ -22,6 +24,8 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
+const val HISTORY_TRACK_FILE = "history_track_file"
+const val HISTORY_TRACK_KEY = "key_for_history_track"
 
 class SearchActivity : AppCompatActivity() {
 
@@ -43,16 +47,20 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var searchRefreshButton: Button
     private lateinit var searchErrorMessage: LinearLayout
     private lateinit var inputEditText: EditText
+
+
     private lateinit var hintMessage: TextView
     private lateinit var historyList: RecyclerView
     private lateinit var buttonClearHistory: Button
+    private lateinit var searchHistoryLayout: LinearLayout
+
+    private lateinit var sharedPreferences: SharedPreferences
 
     private lateinit var searchHistory: SearchHistory
+    private lateinit var searchAdapter: TrackAdapter
+    private lateinit var historyAdapter: TrackAdapter
 
-    private val tracks = mutableListOf<Track>()
-    private val adapter = TrackAdapter(tracks) { track ->
-        searchHistory.addToTrackHistory(track)
-    }
+    private val trackList = ArrayList<Track>()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,16 +74,32 @@ class SearchActivity : AppCompatActivity() {
         }
 
 
-
         val clearButton = findViewById<ImageView>(R.id.clearIcon)
 
         clearButton.setOnClickListener {
             inputEditText.setText("")
             showMessage(StatusResponse.SUCCESS)
-            tracks.clear()
-            adapter.notifyDataSetChanged()
+            trackList.clear()
+            searchAdapter.notifyDataSetChanged()
             hideKeyboard(inputEditText)
+            showHistoryMessage()
         }
+
+        //searchAdapter = TrackAdapter(itemClickListener)
+        //historyAdapter = TrackAdapter(itemClickListener)
+
+
+        //searchList.layoutManager = LinearLayoutManager(this)
+        //searchList.adapter = searchAdapter
+
+        //historyList.layoutManager = LinearLayoutManager(this)
+        //historyList.adapter = historyAdapter
+
+        // создаем экземпляр sharedPreferences
+        sharedPreferences = getSharedPreferences(HISTORY_TRACK_FILE, MODE_PRIVATE)
+        // создаем экземпляр searchHistory
+        //searchHistory = SearchHistory(sharedPreferences)
+
 
         searchList = findViewById(R.id.rvTrack)
         searchErrorImage = findViewById(R.id.searchErrorImage)
@@ -83,32 +107,35 @@ class SearchActivity : AppCompatActivity() {
         searchRefreshButton = findViewById(R.id.searchRefreshButton)
         searchErrorMessage = findViewById(R.id.searchErrorMessage)
         inputEditText = findViewById(R.id.inputEditText)
+
+
         hintMessage = findViewById(R.id.hintMessage)
         historyList = findViewById(R.id.historyList)
         buttonClearHistory = findViewById(R.id.buttonClearHistory)
-
-        searchList.adapter = adapter
-
-        searchHistory =
-            SearchHistory(getSharedPreferences(TRACKS_HISTORY_KEY, Context.MODE_PRIVATE))
-
-        historyList.adapter = adapter
+        searchHistoryLayout = findViewById(R.id.SearchHistoryLayout)
 
 
         searchRefreshButton.setOnClickListener {
             search()
         }
 
-        inputEditText.setOnFocusChangeListener { view, hasFocus ->
-            hintMessage.visibility = if (hasFocus && inputEditText.text.isEmpty()
+        inputEditText.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus && inputEditText.text.isEmpty()
                 && searchHistory.getTrackHistory().isNotEmpty()
-            ) View.VISIBLE
-            else View.GONE
+            ) {
+                showHistoryMessage()
+            } else {
+                searchHistoryLayout.isVisible = false
+            }
         }
+
 
         buttonClearHistory.setOnClickListener {
             searchHistory.clearTrackHistory()
-            hintMessage.isVisible = false
+            searchAdapter.items.clear()
+            searchAdapter.notifyDataSetChanged()
+            searchHistoryLayout.isVisible = false
+
         }
 
 
@@ -119,11 +146,10 @@ class SearchActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 text = inputEditText.text.toString()
                 clearButton.visibility = clearButtonVisibility(s)
-                hintMessage.visibility = if (inputEditText.hasFocus() && s?.isEmpty() == true
-                    && searchHistory.getTrackHistory().isNotEmpty()
-                ) View.VISIBLE
-                else {
-                    View.GONE
+                if (inputEditText.hasFocus() && s?.isEmpty() == true) {
+                    showHistoryMessage()
+                } else {
+                    searchHistoryLayout.isVisible = false
                 }
             }
 
@@ -147,7 +173,44 @@ class SearchActivity : AppCompatActivity() {
             false
         }
         inputEditText.addTextChangedListener(simpleTextWatcher)
+
+        val onHistoryItemClickListener = ItemClickListener { item ->
+            Toast.makeText(
+                this@SearchActivity,
+                "Track: " + item.artistName + " - " + item.trackName,
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+        historyAdapter = TrackAdapter(onHistoryItemClickListener)
+        historyList.layoutManager = LinearLayoutManager(this)
+        historyList.adapter = historyAdapter
+        searchHistory = SearchHistory(sharedPreferences, historyAdapter)
+
+        val onItemClickListener = ItemClickListener { item ->
+            searchHistory.addToTrackHistory(item)
+            Toast.makeText(
+                this@SearchActivity,
+                "Track added: " + item.trackName,
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+
+        searchList.layoutManager = LinearLayoutManager(this)
+        searchAdapter = TrackAdapter(onItemClickListener)
+        searchAdapter.items = trackList
+        searchList.adapter = searchAdapter
+
     }
+
+    private fun showHistoryMessage() {
+        searchList.isVisible = false
+        searchErrorMessage.isVisible = false
+        if (historyAdapter.items.isNotEmpty())
+            searchHistoryLayout.isVisible = true
+        else
+            searchHistoryLayout.isVisible = false
+    }
+
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
@@ -172,13 +235,13 @@ class SearchActivity : AppCompatActivity() {
                     call: Call<TrackResponse>, response: Response<TrackResponse>
                 ) {
                     if (response.code() == 200) {
-                        tracks.clear()
+                        trackList.clear()
                         if (response.body()?.results?.isNotEmpty() == true) {
                             showMessage(StatusResponse.SUCCESS)
-                            tracks.addAll(response.body()?.results!!)
-                            adapter.notifyDataSetChanged()
+                            trackList.addAll(response.body()?.results!!)
+                            searchAdapter.notifyDataSetChanged()
                         }
-                        if (tracks.isEmpty()) {
+                        if (trackList.isEmpty()) {
                             showMessage(StatusResponse.EMPTY)
                         }
                     } else {
@@ -195,8 +258,8 @@ class SearchActivity : AppCompatActivity() {
 
     private fun showMessage(status: StatusResponse) {
         searchErrorMessage.isVisible = true
-        tracks.clear()
-        adapter.notifyDataSetChanged()
+        trackList.clear()
+        searchAdapter.notifyDataSetChanged()
         when (status) {
             StatusResponse.SUCCESS -> {
                 searchErrorMessage.isVisible = false
@@ -205,6 +268,7 @@ class SearchActivity : AppCompatActivity() {
             StatusResponse.EMPTY -> {
                 searchErrorText.text = getString(R.string.nothing_was_found)
                 searchErrorImage.setImageResource(R.drawable.search_error)
+                searchHistoryLayout.isVisible = false
             }
 
             StatusResponse.ERROR -> {
@@ -214,6 +278,7 @@ class SearchActivity : AppCompatActivity() {
             }
         }
     }
+
 
     companion object {
         private const val INPUT = "INPUT"
