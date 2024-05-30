@@ -10,7 +10,6 @@ class SearchHistory(
     private val sharedPrefs: SharedPreferences, private val adapter: TrackAdapter
 ) {
 
-
     init {
         updateAdapter(sharedPrefs)
         listener =
@@ -23,7 +22,6 @@ class SearchHistory(
 
         sharedPrefs.registerOnSharedPreferenceChangeListener(listener)
     }
-
 
     private fun updateAdapter(sharedPreferences: SharedPreferences?) {
         val jsonTracks = sharedPreferences?.getString(HISTORY_KEY, null)
@@ -59,7 +57,6 @@ class SearchHistory(
         sharedPrefs.edit()
             .remove(HISTORY_KEY)
             .apply()
-
     }
 
     private fun saveTrackHistory(tracks: List<Track>) {

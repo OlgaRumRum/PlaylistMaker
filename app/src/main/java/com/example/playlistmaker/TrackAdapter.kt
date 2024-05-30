@@ -1,6 +1,5 @@
 package com.example.playlistmaker
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -9,6 +8,7 @@ class TrackAdapter(private val itemClickListener: ItemClickListener) :
     RecyclerView.Adapter<TrackViewHolder>() {
 
     var items = ArrayList<Track>()
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.track_item, parent, false)
@@ -19,7 +19,6 @@ class TrackAdapter(private val itemClickListener: ItemClickListener) :
         val track = items[position]
         holder.bind(track)
         holder.itemView.setOnClickListener {
-            Log.d("ClickListener", "Нажат элемент: $track")
             itemClickListener.onItemClick(track)
         }
     }

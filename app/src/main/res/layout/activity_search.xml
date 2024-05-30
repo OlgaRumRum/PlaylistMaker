@@ -51,8 +51,8 @@
 
         <ImageView
             android:id="@+id/clearIcon"
-            android:layout_width="16dp"
-            android:layout_height="16dp"
+            android:layout_width="@dimen/search_icon_size"
+            android:layout_height="@dimen/search_icon_size"
             android:layout_marginEnd="12dp"
             android:layout_gravity="center_vertical|end"
             android:src="@android:drawable/ic_menu_close_clear_cancel"
@@ -120,7 +120,7 @@
         <LinearLayout
             android:id="@+id/SearchHistoryLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
             android:visibility="gone">
 
@@ -140,6 +140,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
+                android:layout_weight="1"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:itemCount="3"
                 tools:listitem="@layout/track_item" />

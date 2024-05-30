@@ -24,8 +24,6 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-const val HISTORY_TRACK_FILE = "history_track_file"
-const val HISTORY_TRACK_KEY = "key_for_history_track"
 
 class SearchActivity : AppCompatActivity() {
 
@@ -57,10 +55,12 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var sharedPreferences: SharedPreferences
 
     private lateinit var searchHistory: SearchHistory
+
     private lateinit var searchAdapter: TrackAdapter
     private lateinit var historyAdapter: TrackAdapter
 
     private val trackList = ArrayList<Track>()
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -85,20 +85,8 @@ class SearchActivity : AppCompatActivity() {
             showHistoryMessage()
         }
 
-        //searchAdapter = TrackAdapter(itemClickListener)
-        //historyAdapter = TrackAdapter(itemClickListener)
 
-
-        //searchList.layoutManager = LinearLayoutManager(this)
-        //searchList.adapter = searchAdapter
-
-        //historyList.layoutManager = LinearLayoutManager(this)
-        //historyList.adapter = historyAdapter
-
-        // создаем экземпляр sharedPreferences
         sharedPreferences = getSharedPreferences(HISTORY_TRACK_FILE, MODE_PRIVATE)
-        // создаем экземпляр searchHistory
-        //searchHistory = SearchHistory(sharedPreferences)
 
 
         searchList = findViewById(R.id.rvTrack)
@@ -125,7 +113,7 @@ class SearchActivity : AppCompatActivity() {
             ) {
                 showHistoryMessage()
             } else {
-                searchHistoryLayout.isVisible = false
+                showMessage(StatusResponse.SUCCESS)
             }
         }
 
@@ -149,7 +137,7 @@ class SearchActivity : AppCompatActivity() {
                 if (inputEditText.hasFocus() && s?.isEmpty() == true) {
                     showHistoryMessage()
                 } else {
-                    searchHistoryLayout.isVisible = false
+                    showMessage(StatusResponse.SUCCESS)
                 }
             }
 
@@ -184,15 +172,12 @@ class SearchActivity : AppCompatActivity() {
         historyAdapter = TrackAdapter(onHistoryItemClickListener)
         historyList.layoutManager = LinearLayoutManager(this)
         historyList.adapter = historyAdapter
+
+
         searchHistory = SearchHistory(sharedPreferences, historyAdapter)
 
         val onItemClickListener = ItemClickListener { item ->
             searchHistory.addToTrackHistory(item)
-            Toast.makeText(
-                this@SearchActivity,
-                "Track added: " + item.trackName,
-                Toast.LENGTH_SHORT
-            ).show()
         }
 
         searchList.layoutManager = LinearLayoutManager(this)
@@ -202,13 +187,11 @@ class SearchActivity : AppCompatActivity() {
 
     }
 
+
     private fun showHistoryMessage() {
         searchList.isVisible = false
         searchErrorMessage.isVisible = false
-        if (historyAdapter.items.isNotEmpty())
-            searchHistoryLayout.isVisible = true
-        else
-            searchHistoryLayout.isVisible = false
+        searchHistoryLayout.isVisible = historyAdapter.items.isNotEmpty()
     }
 
 
@@ -251,6 +234,7 @@ class SearchActivity : AppCompatActivity() {
 
                 override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
                     showMessage(StatusResponse.ERROR)
+
                 }
 
             })
@@ -263,18 +247,24 @@ class SearchActivity : AppCompatActivity() {
         when (status) {
             StatusResponse.SUCCESS -> {
                 searchErrorMessage.isVisible = false
+                searchHistoryLayout.isVisible = false
+                searchList.isVisible = true
             }
 
             StatusResponse.EMPTY -> {
                 searchErrorText.text = getString(R.string.nothing_was_found)
                 searchErrorImage.setImageResource(R.drawable.search_error)
                 searchHistoryLayout.isVisible = false
+                searchHistoryLayout.isVisible = false
+                searchList.isVisible = false
             }
 
             StatusResponse.ERROR -> {
                 searchErrorText.text = getString(R.string.no_interrnet_conection)
                 searchErrorImage.setImageResource(R.drawable.internet_error)
                 searchRefreshButton.isVisible = true
+                searchHistoryLayout.isVisible = false
+                searchList.isVisible = false
             }
         }
     }
@@ -282,5 +272,6 @@ class SearchActivity : AppCompatActivity() {
 
     companion object {
         private const val INPUT = "INPUT"
+        const val HISTORY_TRACK_FILE = "history_track_file"
     }
 }
