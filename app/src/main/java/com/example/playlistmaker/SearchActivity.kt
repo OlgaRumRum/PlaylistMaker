@@ -1,6 +1,6 @@
 package com.example.playlistmaker
 
-import android.content.SharedPreferences
+
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -52,7 +52,6 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var buttonClearHistory: Button
     private lateinit var searchHistoryLayout: LinearLayout
 
-    private lateinit var sharedPreferences: SharedPreferences
 
     private lateinit var searchHistory: SearchHistory
 
@@ -85,8 +84,6 @@ class SearchActivity : AppCompatActivity() {
             showHistoryMessage()
         }
 
-
-        sharedPreferences = getSharedPreferences(HISTORY_TRACK_FILE, MODE_PRIVATE)
 
 
         searchList = findViewById(R.id.rvTrack)
@@ -174,7 +171,7 @@ class SearchActivity : AppCompatActivity() {
         historyList.adapter = historyAdapter
 
 
-        searchHistory = SearchHistory(sharedPreferences, historyAdapter)
+        searchHistory = SearchHistory(this, historyAdapter)
 
         val onItemClickListener = ItemClickListener { item ->
             searchHistory.addToTrackHistory(item)
@@ -186,7 +183,6 @@ class SearchActivity : AppCompatActivity() {
         searchList.adapter = searchAdapter
 
     }
-
 
     private fun showHistoryMessage() {
         searchList.isVisible = false
@@ -272,6 +268,5 @@ class SearchActivity : AppCompatActivity() {
 
     companion object {
         private const val INPUT = "INPUT"
-        const val HISTORY_TRACK_FILE = "history_track_file"
     }
 }

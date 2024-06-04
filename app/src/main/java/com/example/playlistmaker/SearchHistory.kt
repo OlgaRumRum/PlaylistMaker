@@ -1,5 +1,6 @@
 package com.example.playlistmaker
 
+import android.content.Context
 import android.content.SharedPreferences
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -7,11 +8,16 @@ import com.google.gson.reflect.TypeToken
 private lateinit var listener: SharedPreferences.OnSharedPreferenceChangeListener
 
 class SearchHistory(
-    private val sharedPrefs: SharedPreferences, private val adapter: TrackAdapter
+    private val context: Context,
+    private val adapter: TrackAdapter
 ) {
 
+    private val searchHistoryPrefs: SharedPreferences by lazy {
+        context.getSharedPreferences(HISTORY_KEY, Context.MODE_PRIVATE)
+    }
+
     init {
-        updateAdapter(sharedPrefs)
+        updateAdapter(searchHistoryPrefs)
         listener =
             SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
 
@@ -20,12 +26,12 @@ class SearchHistory(
                 }
             }
 
-        sharedPrefs.registerOnSharedPreferenceChangeListener(listener)
+        searchHistoryPrefs.registerOnSharedPreferenceChangeListener(listener)
     }
 
     private fun updateAdapter(sharedPreferences: SharedPreferences?) {
         val jsonTracks = sharedPreferences?.getString(HISTORY_KEY, null)
-        if (jsonTracks != null) {
+        jsonTracks?.let {
             val tracks = getTrackHistory()
             adapter.items.clear()
             adapter.items.addAll(tracks)
@@ -35,7 +41,7 @@ class SearchHistory(
 
 
     fun getTrackHistory(): List<Track> {
-        val json = sharedPrefs.getString(HISTORY_KEY, null) ?: return listOf()
+        val json = searchHistoryPrefs.getString(HISTORY_KEY, null) ?: return listOf()
         val type = object : TypeToken<ArrayList<Track>>() {}.type
         return Gson().fromJson(json, type)
     }
@@ -54,21 +60,21 @@ class SearchHistory(
     }
 
     fun clearTrackHistory() {
-        sharedPrefs.edit()
+        searchHistoryPrefs.edit()
             .remove(HISTORY_KEY)
             .apply()
     }
 
     private fun saveTrackHistory(tracks: List<Track>) {
         val json = Gson().toJson(tracks)
-        sharedPrefs.edit()
+        searchHistoryPrefs.edit()
             .putString(HISTORY_KEY, json)
             .apply()
     }
 
     companion object {
-        const val MAX_TRACK_HISTORY = 10
-        const val HISTORY_KEY = "history_key"
+        private const val MAX_TRACK_HISTORY = 10
+        private const val HISTORY_KEY = "history_key"
     }
 
 
