@@ -21,5 +21,7 @@
     <dimen name="refresh_text_size">14sp</dimen>
     <dimen name="placeholder_button_corner_radius">54dp</dimen>
     <dimen name="error_marginTop">102dp</dimen>
+    <dimen name="history_text_height">52dp</dimen>
+    <dimen name="search_icon_size">18dp</dimen>
 
 </resources>
