@@ -1,6 +1,7 @@
 package com.example.playlistmaker
 
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -12,7 +13,6 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.isVisible
@@ -160,11 +160,7 @@ class SearchActivity : AppCompatActivity() {
         inputEditText.addTextChangedListener(simpleTextWatcher)
 
         val onHistoryItemClickListener = ItemClickListener { item ->
-            Toast.makeText(
-                this@SearchActivity,
-                "Track: " + item.artistName + " - " + item.trackName,
-                Toast.LENGTH_SHORT
-            ).show()
+            intentAudioPlayerActivity(item)
         }
         historyAdapter = TrackAdapter(onHistoryItemClickListener)
         historyList.layoutManager = LinearLayoutManager(this)
@@ -175,6 +171,7 @@ class SearchActivity : AppCompatActivity() {
 
         val onItemClickListener = ItemClickListener { item ->
             searchHistory.addToTrackHistory(item)
+            intentAudioPlayerActivity(item)
         }
 
         searchList.layoutManager = LinearLayoutManager(this)
@@ -251,8 +248,8 @@ class SearchActivity : AppCompatActivity() {
                 searchErrorText.text = getString(R.string.nothing_was_found)
                 searchErrorImage.setImageResource(R.drawable.search_error)
                 searchHistoryLayout.isVisible = false
-                searchHistoryLayout.isVisible = false
                 searchList.isVisible = false
+                searchRefreshButton.isVisible = false
             }
 
             StatusResponse.ERROR -> {
@@ -265,8 +262,16 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
+    private fun intentAudioPlayerActivity(track: Track) {
+        val intent = Intent(this@SearchActivity, AudioPlayerActivity::class.java)
+        intent.putExtra(TRACK_KEY, track)
+        startActivity(intent)
+    }
 
     companion object {
         private const val INPUT = "INPUT"
+        const val TRACK_KEY = "track_key"
     }
 }
+
+

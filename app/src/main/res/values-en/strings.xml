@@ -18,10 +18,12 @@
     <string name="user_agreement_button">"https://yandex.ru/legal/practicum_offer/"</string>
     <string name="clear_icon">Clear</string>
     <string name="practikum">Yandex Practucum</string>
+
     <string name="track_cover">Track_cover</string>
-    <string name="track_name">No reply</string>
+    <string name="track_name">Untitled</string>
     <string name="artist_name">No name</string>
     <string name="track_time">00:00</string>
+
     <string name="nothing_was_found">Nothing was found</string>
     <string name="no_interrnet_conection"> Communication problems\n\nThe download failed. Check\ninternet connection</string>
     <string name="refresh">Refresh</string>
@@ -29,5 +31,13 @@
     <string name="You_were_looking_for">You_were_looking_for</string>
     <string name="Clear_the_history">Clear the history</string>
 
+    <string name="duration">Duration</string>
+    <string name="album">Album</string>
+    <string name="year">Year</string>
+    <string name="genre">Genre</string>
+    <string name="country">Country</string>
 
+    <string name="button_add">Add</string>
+    <string name="button_play">Play</string>
+    <string name="button_favorite">Favorite</string>
 </resources>

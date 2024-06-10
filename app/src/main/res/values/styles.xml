@@ -49,5 +49,21 @@
 
     </style>
 
+    <style name="AudioPlayerTextLeft">
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textSize">@dimen/audio_player_text_size</item>
+        <item name="android:textFontWeight">400</item>
+        <item name="android:textColor">@color/text_gray</item>
+        <item name="android:layout_marginBottom">@dimen/padding</item>
+    </style>
+
+    <style name="AudioPlayerTextRight">
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textSize">@dimen/audio_player_text_size</item>
+        <item name="android:textFontWeight">400</item>
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+        <item name="android:layout_marginBottom">@dimen/padding</item>
+    </style>
+
 
 </resources>
