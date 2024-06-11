@@ -23,5 +23,9 @@
     <dimen name="error_marginTop">102dp</dimen>
     <dimen name="history_text_height">52dp</dimen>
     <dimen name="search_icon_size">18dp</dimen>
+    <dimen name="margin_top_artwork">42dp</dimen>
+    <dimen name="circleRadius_artwork">8dp</dimen>
+    <dimen name="audio_player_text_size">13sp</dimen>
+    <dimen name="audio_player_margin">24dp</dimen>
 
 </resources>
