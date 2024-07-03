@@ -1,9 +1,11 @@
 package com.example.playlistmaker
 
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
@@ -12,6 +14,13 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 class AudioPlayerActivity : AppCompatActivity() {
+
+    private lateinit var buttonPlay: ImageButton
+    private lateinit var progressTextView: TextView
+    private lateinit var progressUpdater: AudioProgressUpdater
+    private var mediaPlayer = MediaPlayer()
+
+    private var playerState = STATE_DEFAULT
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,11 +36,27 @@ class AudioPlayerActivity : AppCompatActivity() {
         val genre = findViewById<TextView>(R.id.genreName)
         val country = findViewById<TextView>(R.id.countryName)
 
+        buttonPlay = findViewById(R.id.button_play)
+        progressTextView = findViewById(R.id.progressTime)
+        progressUpdater = AudioProgressUpdater(mediaPlayer, progressTextView)
+
 
         val backArrowButton = findViewById<ImageButton>(R.id.back_arrow_button)
         backArrowButton.setOnClickListener { finish() }
 
         val track: Track? = intent.getParcelableExtra(SearchActivity.TRACK_KEY)
+
+
+        if (track != null) {
+            preparePlayer(track)
+        } else {
+            Toast.makeText(this, R.string.track_not_found_error, Toast.LENGTH_SHORT).show()
+        }
+
+        buttonPlay.setOnClickListener {
+            playbackControl()
+        }
+
 
         if (track != null) {
             trackName.text = track.trackName
@@ -57,14 +82,73 @@ class AudioPlayerActivity : AppCompatActivity() {
 
     private fun showErrorDialog() {
         val dialog = AlertDialog.Builder(this)
-            .setMessage("Ошибка: трек не найден.")
-            .setPositiveButton("OK") { dialog, which ->
-                // Действия при нажатии на кнопку OK, например, закрытие активити
+            .setMessage(R.string.track_not_found_error)
+            .setPositiveButton(R.string.Button_Ok) { dialog, which ->
                 finish()
             }
             .create()
         dialog.show()
     }
 
+    private fun preparePlayer(track: Track) {
+        mediaPlayer.setDataSource(track.previewUrl)
+        mediaPlayer.prepareAsync()
+        mediaPlayer.setOnPreparedListener {
+            buttonPlay.isEnabled = true
+            playerState = STATE_PREPARED
+        }
+        mediaPlayer.setOnCompletionListener {
+            playerState = STATE_PREPARED
+            buttonPlay.setImageResource(R.drawable.button_play)
+            progressUpdater.reset()
+
+        }
+    }
+
+    private fun startPlayer() {
+        mediaPlayer.start()
+        buttonPlay.setImageResource(R.drawable.button_pause)
+        playerState = STATE_PLAYING
+        progressUpdater.start()
+
+    }
+
+    private fun pausePlayer() {
+        mediaPlayer.pause()
+        buttonPlay.setImageResource(R.drawable.button_play)
+        playerState = STATE_PAUSED
+        progressUpdater.stop()
+    }
+
+    private fun playbackControl() {
+        when (playerState) {
+            STATE_PLAYING -> {
+                pausePlayer()
+            }
+
+            STATE_PREPARED, STATE_PAUSED -> {
+                startPlayer()
+            }
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        pausePlayer()
+        progressUpdater.stop()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mediaPlayer.release()
+        progressUpdater.stop()
+    }
+
+    companion object {
+        private const val STATE_DEFAULT = 0
+        private const val STATE_PREPARED = 1
+        private const val STATE_PLAYING = 2
+        private const val STATE_PAUSED = 3
+    }
 }
 

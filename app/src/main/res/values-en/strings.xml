@@ -40,4 +40,7 @@
     <string name="button_add">Add</string>
     <string name="button_play">Play</string>
     <string name="button_favorite">Favorite</string>
+
+    <string name="track_not_found_error">Еrror: track not found</string>
+    <string name="Button_Ok">OK</string>
 </resources>

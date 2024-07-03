@@ -27,5 +27,7 @@
     <dimen name="circleRadius_artwork">8dp</dimen>
     <dimen name="audio_player_text_size">13sp</dimen>
     <dimen name="audio_player_margin">24dp</dimen>
+    <dimen name="progressBar_size">44dp</dimen>
+    <dimen name="progressBar_marginTop">140dp</dimen>
 
 </resources>
