@@ -1,8 +1,11 @@
 package com.example.playlistmaker
 
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -12,6 +15,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -58,8 +62,16 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var searchAdapter: TrackAdapter
     private lateinit var historyAdapter: TrackAdapter
 
+    private lateinit var progressBar: ProgressBar
+
+    private val searchRunnable = Runnable { search() }
+
     private val trackList = ArrayList<Track>()
 
+
+    private var isClickAllowed = true
+
+    private val handler = Handler(Looper.getMainLooper())
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -80,7 +92,7 @@ class SearchActivity : AppCompatActivity() {
             showMessage(StatusResponse.SUCCESS)
             trackList.clear()
             searchAdapter.notifyDataSetChanged()
-            hideKeyboard(inputEditText)
+            hideKeyboard()
             showHistoryMessage()
         }
 
@@ -99,6 +111,7 @@ class SearchActivity : AppCompatActivity() {
         buttonClearHistory = findViewById(R.id.buttonClearHistory)
         searchHistoryLayout = findViewById(R.id.SearchHistoryLayout)
 
+        progressBar = findViewById(R.id.progressBar)
 
         searchRefreshButton.setOnClickListener {
             search()
@@ -135,7 +148,9 @@ class SearchActivity : AppCompatActivity() {
                     showHistoryMessage()
                 } else {
                     showMessage(StatusResponse.SUCCESS)
+                    searchDebounce()
                 }
+
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -198,18 +213,26 @@ class SearchActivity : AppCompatActivity() {
         text = savedInstanceState.getString(INPUT).toString()
     }
 
-    private fun hideKeyboard(view: View) {
-        val inputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-        inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+
+    private fun hideKeyboard() {
+        val inputMethodManager =
+            getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(inputEditText.windowToken, 0)
     }
 
 
     private fun search() {
+
+        searchErrorMessage.isVisible = false
+        searchList.isVisible = false
+        progressBar.isVisible = true
+
         trackService.search(inputEditText.text.toString())
             .enqueue(object : Callback<TrackResponse> {
                 override fun onResponse(
                     call: Call<TrackResponse>, response: Response<TrackResponse>
                 ) {
+                    progressBar.isVisible = false
                     if (response.code() == 200) {
                         trackList.clear()
                         if (response.body()?.results?.isNotEmpty() == true) {
@@ -226,11 +249,13 @@ class SearchActivity : AppCompatActivity() {
                 }
 
                 override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
+                    progressBar.isVisible = false
                     showMessage(StatusResponse.ERROR)
 
                 }
 
             })
+        hideKeyboard()
     }
 
     private fun showMessage(status: StatusResponse) {
@@ -263,14 +288,33 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun intentAudioPlayerActivity(track: Track) {
-        val intent = Intent(this@SearchActivity, AudioPlayerActivity::class.java)
-        intent.putExtra(TRACK_KEY, track)
-        startActivity(intent)
+        if (clickDebounce()) {
+            val intent = Intent(this@SearchActivity, AudioPlayerActivity::class.java)
+            intent.putExtra(TRACK_KEY, track)
+            startActivity(intent)
+        }
     }
+
+    private fun clickDebounce(): Boolean {
+        val current = isClickAllowed
+        if (isClickAllowed) {
+            isClickAllowed = false
+            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
+        }
+        return current
+    }
+
+    private fun searchDebounce() {
+        handler.removeCallbacks(searchRunnable)
+        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
+    }
+
 
     companion object {
         private const val INPUT = "INPUT"
         const val TRACK_KEY = "track_key"
+        private const val CLICK_DEBOUNCE_DELAY = 1000L
+        private const val SEARCH_DEBOUNCE_DELAY = 2000L
     }
 }
 

@@ -40,4 +40,7 @@
     <string name="button_play">Play</string>
     <string name="button_favorite">Избранное</string>
 
+    <string name="track_not_found_error">Ошибка: трек не найден.</string>
+    <string name="Button_Ok">OK</string>
+
 </resources>
