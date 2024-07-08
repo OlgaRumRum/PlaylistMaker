@@ -2,10 +2,11 @@ package com.example.playlistmaker
 
 import android.media.MediaPlayer
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
@@ -21,6 +22,9 @@ class AudioPlayerActivity : AppCompatActivity() {
     private var mediaPlayer = MediaPlayer()
 
     private var playerState = STATE_DEFAULT
+
+    private val handler = Handler(Looper.getMainLooper())
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,7 +54,7 @@ class AudioPlayerActivity : AppCompatActivity() {
         if (track != null) {
             preparePlayer(track)
         } else {
-            Toast.makeText(this, R.string.track_not_found_error, Toast.LENGTH_SHORT).show()
+            finish()
         }
 
         buttonPlay.setOnClickListener {
@@ -142,6 +146,7 @@ class AudioPlayerActivity : AppCompatActivity() {
         super.onDestroy()
         mediaPlayer.release()
         progressUpdater.stop()
+        handler.removeCallbacksAndMessages(null)
     }
 
     companion object {

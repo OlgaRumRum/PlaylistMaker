@@ -13,17 +13,17 @@ class AudioProgressUpdater(
     private val progressTextView: TextView
 ) {
     private val handler = Handler(Looper.getMainLooper())
-    private val updateInterval = 300L
+
+    private val dateFormat by lazy {
+        SimpleDateFormat("mm:ss", Locale.getDefault())
+    }
 
     private val progressRunnable = object : Runnable {
         override fun run() {
             if (mediaPlayer.isPlaying) {
-                val formattedTime = SimpleDateFormat(
-                    "mm:ss",
-                    Locale.getDefault()
-                ).format(mediaPlayer.currentPosition)
+                val formattedTime = dateFormat.format(mediaPlayer.currentPosition)
                 progressTextView.text = formattedTime.toString()
-                handler.postDelayed(this, updateInterval)
+                handler.postDelayed(this, TIMER_UPDATE_INTERVAL)
             }
         }
     }
@@ -39,7 +39,11 @@ class AudioProgressUpdater(
     }
 
     fun reset() {
-        progressTextView.text = "00:00"
+        progressTextView.text = progressTextView.context.getString(R.string.track_time)
 
+    }
+
+    companion object {
+        private const val TIMER_UPDATE_INTERVAL = 300L
     }
 }
