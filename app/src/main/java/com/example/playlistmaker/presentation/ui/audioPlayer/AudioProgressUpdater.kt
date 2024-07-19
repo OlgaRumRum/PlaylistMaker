@@ -1,9 +1,10 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.presentation.ui.audioPlayer
 
 import android.media.MediaPlayer
 import android.os.Handler
 import android.os.Looper
 import android.widget.TextView
+import com.example.playlistmaker.R
 import java.text.SimpleDateFormat
 import java.util.Locale
 

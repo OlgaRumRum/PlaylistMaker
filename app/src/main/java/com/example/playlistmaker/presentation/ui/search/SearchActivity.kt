@@ -1,8 +1,9 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.presentation.ui.search
 
 
 import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -22,26 +23,18 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import com.example.playlistmaker.Creator
+import com.example.playlistmaker.R
+import com.example.playlistmaker.domain.SearchHistoryRepository
+import com.example.playlistmaker.domain.api.TrackInteractor
+import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.presentation.ui.audioPlayer.AudioPlayerActivity
 
 
 class SearchActivity : AppCompatActivity() {
 
 
     private var text: String = ""
-
-    private val itunesBaseUrl = "https://itunes.apple.com"
-
-    private val retrofit = Retrofit.Builder()
-        .baseUrl(itunesBaseUrl)
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-
-    private val trackService = retrofit.create(TrackApi::class.java)
 
     private lateinit var searchList: RecyclerView
     private lateinit var searchErrorImage: ImageView
@@ -56,8 +49,7 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var buttonClearHistory: Button
     private lateinit var searchHistoryLayout: LinearLayout
 
-
-    private lateinit var searchHistory: SearchHistory
+    private lateinit var searchHistoryRepository: SearchHistoryRepository
 
     private lateinit var searchAdapter: TrackAdapter
     private lateinit var historyAdapter: TrackAdapter
@@ -67,7 +59,6 @@ class SearchActivity : AppCompatActivity() {
     private val searchRunnable = Runnable { search() }
 
     private val trackList = ArrayList<Track>()
-
 
     private var isClickAllowed = true
 
@@ -96,8 +87,6 @@ class SearchActivity : AppCompatActivity() {
             showHistoryMessage()
         }
 
-
-
         searchList = findViewById(R.id.rvTrack)
         searchErrorImage = findViewById(R.id.searchErrorImage)
         searchErrorText = findViewById(R.id.searchErrorText)
@@ -115,11 +104,13 @@ class SearchActivity : AppCompatActivity() {
 
         searchRefreshButton.setOnClickListener {
             search()
+            searchErrorMessage.isVisible = false
         }
+
 
         inputEditText.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus && inputEditText.text.isEmpty()
-                && searchHistory.getTrackHistory().isNotEmpty()
+                && searchHistoryRepository.getTrackHistory().isNotEmpty()
             ) {
                 showHistoryMessage()
             } else {
@@ -129,7 +120,7 @@ class SearchActivity : AppCompatActivity() {
 
 
         buttonClearHistory.setOnClickListener {
-            searchHistory.clearTrackHistory()
+            searchHistoryRepository.clearTrackHistory()
             searchAdapter.items.clear()
             searchAdapter.notifyDataSetChanged()
             searchHistoryLayout.isVisible = false
@@ -156,6 +147,7 @@ class SearchActivity : AppCompatActivity() {
             override fun afterTextChanged(s: Editable?) {
             }
 
+
             private fun clearButtonVisibility(s: CharSequence?): Int {
                 return if (s.isNullOrEmpty()) {
                     View.GONE
@@ -172,6 +164,7 @@ class SearchActivity : AppCompatActivity() {
             }
             false
         }
+
         inputEditText.addTextChangedListener(simpleTextWatcher)
 
         val onHistoryItemClickListener = ItemClickListener { item ->
@@ -182,10 +175,11 @@ class SearchActivity : AppCompatActivity() {
         historyList.adapter = historyAdapter
 
 
-        searchHistory = SearchHistory(this, historyAdapter)
+        Creator.init(this, historyAdapter)
+        searchHistoryRepository = Creator.provideSearchHistoryRepository()
 
         val onItemClickListener = ItemClickListener { item ->
-            searchHistory.addToTrackHistory(item)
+            searchHistoryRepository.addToTrackHistory(item)
             intentAudioPlayerActivity(item)
         }
 
@@ -193,7 +187,6 @@ class SearchActivity : AppCompatActivity() {
         searchAdapter = TrackAdapter(onItemClickListener)
         searchAdapter.items = trackList
         searchList.adapter = searchAdapter
-
     }
 
     private fun showHistoryMessage() {
@@ -201,7 +194,6 @@ class SearchActivity : AppCompatActivity() {
         searchErrorMessage.isVisible = false
         searchHistoryLayout.isVisible = historyAdapter.items.isNotEmpty()
     }
-
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
@@ -222,51 +214,64 @@ class SearchActivity : AppCompatActivity() {
 
 
     private fun search() {
+        val query = inputEditText.text.toString()
+        if (query.isNotEmpty()) {
+            searchErrorMessage.isVisible = false
+            searchList.isVisible = false
+            progressBar.isVisible = true
 
-        searchErrorMessage.isVisible = false
-        searchList.isVisible = false
-        progressBar.isVisible = true
 
-        trackService.search(inputEditText.text.toString())
-            .enqueue(object : Callback<TrackResponse> {
-                override fun onResponse(
-                    call: Call<TrackResponse>, response: Response<TrackResponse>
-                ) {
-                    progressBar.isVisible = false
-                    if (response.code() == 200) {
-                        trackList.clear()
-                        if (response.body()?.results?.isNotEmpty() == true) {
-                            showMessage(StatusResponse.SUCCESS)
-                            trackList.addAll(response.body()?.results!!)
+            if (!isNetworkAvailable()) {
+                progressBar.isVisible = false
+                showMessage(StatusResponse.ERROR)
+                hideKeyboard()
+                return
+            }
+            Creator.provideTrackInteractor().search(query, object : TrackInteractor.TrackConsumer {
+                override fun consume(foundTracks: List<Track>) {
+                    runOnUiThread {
+                        progressBar.visibility = View.GONE
+
+                        if (foundTracks.isNotEmpty()) {
+                            trackList.clear()
+                            trackList.addAll(foundTracks)
                             searchAdapter.notifyDataSetChanged()
-                        }
-                        if (trackList.isEmpty()) {
+                            showMessage(StatusResponse.SUCCESS)
+                        } else {
                             showMessage(StatusResponse.EMPTY)
                         }
-                    } else {
+
+                    }
+                }
+
+                override fun onFailure(t: Throwable) {
+                    runOnUiThread {
+                        progressBar.visibility = View.GONE
                         showMessage(StatusResponse.ERROR)
                     }
                 }
 
-                override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
-                    progressBar.isVisible = false
-                    showMessage(StatusResponse.ERROR)
-
-                }
-
             })
-        hideKeyboard()
+
+            hideKeyboard()
+
+        }
+    }
+
+    private fun isNetworkAvailable(): Boolean {
+        val connectivityManager =
+            getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val networkInfo = connectivityManager.activeNetworkInfo
+        return networkInfo != null && networkInfo.isConnected
     }
 
     private fun showMessage(status: StatusResponse) {
-        searchErrorMessage.isVisible = true
-        trackList.clear()
-        searchAdapter.notifyDataSetChanged()
         when (status) {
             StatusResponse.SUCCESS -> {
                 searchErrorMessage.isVisible = false
                 searchHistoryLayout.isVisible = false
                 searchList.isVisible = true
+                searchErrorMessage.isVisible = false
             }
 
             StatusResponse.EMPTY -> {
@@ -275,6 +280,7 @@ class SearchActivity : AppCompatActivity() {
                 searchHistoryLayout.isVisible = false
                 searchList.isVisible = false
                 searchRefreshButton.isVisible = false
+                searchErrorMessage.isVisible = true
             }
 
             StatusResponse.ERROR -> {
@@ -283,6 +289,7 @@ class SearchActivity : AppCompatActivity() {
                 searchRefreshButton.isVisible = true
                 searchHistoryLayout.isVisible = false
                 searchList.isVisible = false
+                searchErrorMessage.isVisible = true
             }
         }
     }

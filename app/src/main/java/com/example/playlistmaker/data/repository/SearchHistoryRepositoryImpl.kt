@@ -1,19 +1,27 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.data.repository
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.example.playlistmaker.data.ApplicationContextProvider
+import com.example.playlistmaker.domain.SearchHistoryRepository
+import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.presentation.ui.search.TrackAdapter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
+
 private lateinit var listener: SharedPreferences.OnSharedPreferenceChangeListener
 
-class SearchHistory(
-    private val context: Context,
+class SearchHistoryRepositoryImpl(
+    private val applicationContextProvider: ApplicationContextProvider,
     private val adapter: TrackAdapter
-) {
+) : SearchHistoryRepository {
 
     private val searchHistoryPrefs: SharedPreferences by lazy {
-        context.getSharedPreferences(HISTORY_KEY, Context.MODE_PRIVATE)
+        applicationContextProvider.applicationContext.getSharedPreferences(
+            HISTORY_KEY,
+            Context.MODE_PRIVATE
+        )
     }
 
     init {
@@ -39,33 +47,31 @@ class SearchHistory(
         }
     }
 
-
-    fun getTrackHistory(): List<Track> {
+    override fun getTrackHistory(): List<Track> {
         val json = searchHistoryPrefs.getString(HISTORY_KEY, null) ?: return listOf()
         val type = object : TypeToken<ArrayList<Track>>() {}.type
         return Gson().fromJson(json, type)
     }
 
-    fun addToTrackHistory(newTrack: Track) {
+    override fun addToTrackHistory(track: Track) {
         val tracks = getTrackHistory().toMutableList()
-        if (tracks.contains(newTrack)) {
-            tracks.remove(newTrack)
+        if (tracks.contains(track)) {
+            tracks.remove(track)
         }
-        tracks.add(0, newTrack)
+        tracks.add(0, track)
         if (tracks.size > MAX_TRACK_HISTORY) {
             tracks.removeLast()
         }
         saveTrackHistory(tracks)
-
     }
 
-    fun clearTrackHistory() {
+    override fun clearTrackHistory() {
         searchHistoryPrefs.edit()
             .remove(HISTORY_KEY)
             .apply()
     }
 
-    private fun saveTrackHistory(tracks: List<Track>) {
+    override fun saveTrackHistory(tracks: List<Track>) {
         val json = Gson().toJson(tracks)
         searchHistoryPrefs.edit()
             .putString(HISTORY_KEY, json)
@@ -76,8 +82,5 @@ class SearchHistory(
         private const val MAX_TRACK_HISTORY = 10
         private const val HISTORY_KEY = "history_key"
     }
-
-
 }
-
 
