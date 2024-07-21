@@ -13,17 +13,18 @@ import java.util.Locale
 
 
 class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
     private val songName: TextView = itemView.findViewById(R.id.trackName)
     private val songArtist: TextView = itemView.findViewById(R.id.artistName)
     private val songTime: TextView = itemView.findViewById(R.id.trackTime)
     private val artwork: ImageView = itemView.findViewById(R.id.artWork)
 
-    fun bind(item: Track) {
+
+    fun bind(item: Track, onItemClickListener: OnItemClickListener?) {
 
         songName.text = item.trackName
         songArtist.text = item.artistName
         songTime.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(item.trackTimeMillis)
-
 
         Glide.with(itemView)
             .load(item.artworkUrl100)
@@ -32,6 +33,13 @@ class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             .transform(RoundedCorners(itemView.resources.getDimensionPixelSize(R.dimen.artWorkUrl100_radius)))
             .into(artwork)
 
+        itemView.setOnClickListener {
+            onItemClickListener?.onItemClick(item)
+        }
 
+    }
+
+    fun interface OnItemClickListener {
+        fun onItemClick(item: Track)
     }
 }

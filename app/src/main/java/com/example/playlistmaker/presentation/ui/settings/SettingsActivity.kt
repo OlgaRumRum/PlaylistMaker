@@ -6,10 +6,8 @@ import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import com.example.playlistmaker.App
 import com.example.playlistmaker.R
-import com.example.playlistmaker.data.App
-import com.example.playlistmaker.data.PLAYLIST_MAKER_PREFERENCES
-import com.example.playlistmaker.data.THEME_KEY
 import com.google.android.material.switchmaterial.SwitchMaterial
 
 class SettingsActivity : AppCompatActivity() {
@@ -24,15 +22,13 @@ class SettingsActivity : AppCompatActivity() {
             onBackPressedDispatcher.onBackPressed()
         }
 
+
         val themeSwitcher = findViewById<SwitchMaterial>(R.id.themeSwitcher)
         themeSwitcher.isChecked = (applicationContext as App).darkTheme
-        val sharedPrefs = getSharedPreferences(PLAYLIST_MAKER_PREFERENCES, MODE_PRIVATE)
+
 
         themeSwitcher.setOnCheckedChangeListener { _, checked ->
-            (applicationContext as App).switchTheme(checked)
-            sharedPrefs.edit()
-                .putBoolean(THEME_KEY, checked)
-                .apply()
+            (applicationContext as App).darkTheme = checked
         }
 
 
