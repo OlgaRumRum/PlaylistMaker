@@ -27,8 +27,9 @@ class SettingsActivity : AppCompatActivity() {
 
 
         binding.themeSwitcher.setOnCheckedChangeListener { _, checked ->
-            (applicationContext as App).darkTheme = checked
+            (applicationContext as App).switchTheme(checked)
         }
+
 
         binding.shareTheApp.setOnClickListener {
             val intent = Intent(Intent.ACTION_SEND)
