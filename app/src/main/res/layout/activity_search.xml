@@ -6,7 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:background="?attr/colorPrimaryVariant"
     android:orientation="vertical"
-    tools:context=".presentation.ui.main.MainActivity"
+    tools:context=".ui.main.MainActivity"
     >
 
     <androidx.appcompat.widget.Toolbar
@@ -127,7 +127,7 @@
 
 
         <LinearLayout
-            android:id="@+id/SearchHistoryLayout"
+            android:id="@+id/searchHistoryLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"

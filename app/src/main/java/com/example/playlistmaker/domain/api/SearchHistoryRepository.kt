@@ -1,4 +1,4 @@
-package com.example.playlistmaker.domain
+package com.example.playlistmaker.domain.api
 
 import com.example.playlistmaker.domain.models.Track
 
@@ -7,8 +7,5 @@ interface SearchHistoryRepository {
     fun getTrackHistory(): List<Track>
     fun addToTrackHistory(newTrack: Track)
     fun clearTrackHistory()
-
-    fun saveTrackHistory(tracks: List<Track>)
-
 
 }

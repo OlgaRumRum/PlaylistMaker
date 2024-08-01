@@ -1,26 +1,24 @@
-package com.example.playlistmaker.presentation.ui.audioPlayer
+package com.example.playlistmaker.ui.audioPlayer
 
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
+import com.example.playlistmaker.databinding.ActivityAudioPlayerBinding
 import com.example.playlistmaker.domain.models.Track
-import com.example.playlistmaker.presentation.ui.search.SearchActivity
+import com.example.playlistmaker.ui.search.SearchActivity
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 class AudioPlayerActivity : AppCompatActivity() {
 
-    private lateinit var buttonPlay: ImageButton
-    private lateinit var progressTextView: TextView
+    private lateinit var binding: ActivityAudioPlayerBinding
+
     private lateinit var progressUpdater: AudioProgressUpdater
     private var mediaPlayer = MediaPlayer()
 
@@ -31,25 +29,24 @@ class AudioPlayerActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_audio_player)
 
-        val artworkUrl = findViewById<ImageView>(R.id.artWork_audio_player)
-        val trackName = findViewById<TextView>(R.id.trackName_audio_player)
-        val artist = findViewById<TextView>(R.id.artist)
-
-        val duration = findViewById<TextView>(R.id.trackTime)
-        val album = findViewById<TextView>(R.id.albumName)
-        val year = findViewById<TextView>(R.id.yearName)
-        val genre = findViewById<TextView>(R.id.genreName)
-        val country = findViewById<TextView>(R.id.countryName)
-
-        buttonPlay = findViewById(R.id.button_play)
-        progressTextView = findViewById(R.id.progressTime)
-        progressUpdater = AudioProgressUpdater(mediaPlayer, progressTextView)
+        binding = ActivityAudioPlayerBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
 
-        val backArrowButton = findViewById<ImageButton>(R.id.back_arrow_button)
-        backArrowButton.setOnClickListener { finish() }
+        val artworkUrl = binding.artWorkAudioPlayer
+        val trackName = binding.trackNameAudioPlayer
+        val artist = binding.artist
+
+        val duration = binding.trackTime
+        val album = binding.albumName
+        val year = binding.yearName
+        val genre = binding.genreName
+        val country = binding.countryName
+
+        progressUpdater = AudioProgressUpdater(mediaPlayer, binding.progressTime)
+
+        binding.backArrowButton.setOnClickListener { finish() }
 
         val track: Track? = intent.getParcelableExtra(SearchActivity.TRACK_KEY)
 
@@ -60,7 +57,7 @@ class AudioPlayerActivity : AppCompatActivity() {
             finish()
         }
 
-        buttonPlay.setOnClickListener {
+        binding.buttonPlay.setOnClickListener {
             playbackControl()
         }
 
@@ -101,12 +98,12 @@ class AudioPlayerActivity : AppCompatActivity() {
         mediaPlayer.setDataSource(track.previewUrl)
         mediaPlayer.prepareAsync()
         mediaPlayer.setOnPreparedListener {
-            buttonPlay.isEnabled = true
+            binding.buttonPlay.isEnabled = true
             playerState = STATE_PREPARED
         }
         mediaPlayer.setOnCompletionListener {
             playerState = STATE_PREPARED
-            buttonPlay.setImageResource(R.drawable.button_play)
+            binding.buttonPlay.setImageResource(R.drawable.button_play)
             progressUpdater.reset()
 
         }
@@ -114,7 +111,7 @@ class AudioPlayerActivity : AppCompatActivity() {
 
     private fun startPlayer() {
         mediaPlayer.start()
-        buttonPlay.setImageResource(R.drawable.button_pause)
+        binding.buttonPlay.setImageResource(R.drawable.button_pause)
         playerState = STATE_PLAYING
         progressUpdater.start()
 
@@ -122,7 +119,7 @@ class AudioPlayerActivity : AppCompatActivity() {
 
     private fun pausePlayer() {
         mediaPlayer.pause()
-        buttonPlay.setImageResource(R.drawable.button_play)
+        binding.buttonPlay.setImageResource(R.drawable.button_play)
         playerState = STATE_PAUSED
         progressUpdater.stop()
     }

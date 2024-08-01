@@ -3,7 +3,7 @@ package com.example.playlistmaker.data.repository
 
 import android.content.SharedPreferences
 import androidx.core.content.edit
-import com.example.playlistmaker.domain.SearchHistoryRepository
+import com.example.playlistmaker.domain.api.SearchHistoryRepository
 import com.example.playlistmaker.domain.models.Track
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -18,6 +18,7 @@ class SearchHistoryRepositoryImpl(private val sharedPreferences: SharedPreferenc
         return Gson().fromJson(json, type)
     }
 
+
     override fun addToTrackHistory(newTrack: Track) {
         val tracks = getTrackHistory().toMutableList()
         tracks.removeIf { it.trackId == newTrack.trackId }
@@ -25,8 +26,12 @@ class SearchHistoryRepositoryImpl(private val sharedPreferences: SharedPreferenc
         if (tracks.size > MAX_TRACK_HISTORY) {
             tracks.removeLast()
         }
-        saveTrackHistory(tracks)
+        val json = Gson().toJson(tracks)
+        sharedPreferences.edit()
+            .putString(HISTORY_KEY, json)
+            .apply()
     }
+
 
     override fun clearTrackHistory() {
         sharedPreferences.edit {
@@ -34,12 +39,6 @@ class SearchHistoryRepositoryImpl(private val sharedPreferences: SharedPreferenc
         }
     }
 
-    override fun saveTrackHistory(tracks: List<Track>) {
-        val json = Gson().toJson(tracks)
-        sharedPreferences.edit()
-            .putString(HISTORY_KEY, json)
-            .apply()
-    }
 
     companion object {
         private const val MAX_TRACK_HISTORY = 10
