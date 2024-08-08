@@ -1,7 +1,7 @@
 package com.example.playlistmaker.settings.domain
 
 
-class SettingsInteractorImpl(val repository: SettingsRepository) : SettingsInteractor {
+class SettingsInteractorImpl(private val repository: SettingsRepository) : SettingsInteractor {
 
     override fun getThemeSettings(): ThemeSettings {
         return repository.getThemeSettings()

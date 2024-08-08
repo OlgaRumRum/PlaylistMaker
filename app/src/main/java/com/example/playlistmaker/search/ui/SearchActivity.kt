@@ -9,16 +9,14 @@ import android.os.Handler
 import android.os.Looper
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.ProgressBar
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
 import com.example.playlistmaker.audioPlayer.ui.AudioPlayerActivity
-import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.search.domain.models.Track
 
@@ -27,33 +25,22 @@ class SearchActivity : AppCompatActivity() {
 
 
     private var text: String = ""
+    private var input = ""
 
     private lateinit var binding: ActivitySearchBinding
 
-    private val searchInteractor = Creator.provideTrackInteractor()
-    private val searchHistoryInteractor = Creator.provideSearchHistoryInteractor()
 
-    private lateinit var searchAdapter: TrackAdapter
-    private lateinit var historyAdapter: TrackAdapter
+    private var searchAdapter = TrackAdapter()
+    private var historyAdapter = TrackAdapter()
 
-    private lateinit var progressBar: ProgressBar
-
-
-    private val trackList = mutableListOf<Track>()
 
     private var isClickAllowed = true
 
     private val handler = Handler(Looper.getMainLooper())
 
 
-    private val viewModel by lazy {
-        ViewModelProvider(
-            this,
-            SearchViewModel.getViewModelFactory(
-                searchInteractor,
-                searchHistoryInteractor
-            )
-        )[SearchViewModel::class.java]
+    private val viewModel by viewModels<SearchViewModel> {
+        SearchViewModel.getViewModelFactory()
     }
 
 
@@ -71,77 +58,51 @@ class SearchActivity : AppCompatActivity() {
 
         binding.clearIcon.setOnClickListener {
             binding.inputEditText.setText("")
-            showListMessage()
-            trackList.clear()
-            searchAdapter.notifyDataSetChanged()
             hideKeyboard()
-            showHistoryMessage()
         }
 
-        progressBar = binding.progressBar
+
 
         binding.searchRefreshButton.setOnClickListener {
-            viewModel.search(binding.inputEditText.text.toString())
-            binding.searchErrorMessage.isVisible = false
+            viewModel.repeatRequest()
             viewModel.hideKeyboard()
         }
 
 
         binding.inputEditText.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus && binding.inputEditText.text.isEmpty()
-                && searchHistoryInteractor.getTrackHistory().isNotEmpty()
-            ) {
-                showHistoryMessage()
-            } else {
-                showListMessage()
-            }
+            viewModel.changeInputEditTextState(hasFocus, binding.inputEditText.text.toString())
         }
 
 
+
         binding.buttonClearHistory.setOnClickListener {
-            searchHistoryInteractor.clearTrackHistory()
-            searchAdapter.notifyDataSetChanged()
-            binding.searchHistoryLayout.isVisible = false
+            viewModel.clearHistory()
         }
 
 
         binding.inputEditText.addTextChangedListener(
             onTextChanged = { charSequence, _, _, _ ->
-                text = binding.inputEditText.text.toString()
+                viewModel.changeInputEditTextState(
+                    binding.inputEditText.hasFocus(),
+                    charSequence.toString()
+                )
+                input = charSequence.toString()
+            }
+        )
 
-                binding.clearIcon.isVisible = !charSequence.isNullOrEmpty()
 
-                if (charSequence != null) {
-                    if (binding.inputEditText.hasFocus() && charSequence.isEmpty()) {
-                        showHistoryMessage()
-                    } else {
-                        showListMessage()
-                        viewModel.searchDebounce(changedText = charSequence.toString())
-                    }
-                }
-            })
 
         binding.inputEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 viewModel.search(binding.inputEditText.text.toString())
-                true
+                //true
             }
             false
         }
 
 
-
-        searchAdapter = TrackAdapter()
-        historyAdapter = TrackAdapter()
-
-
-
         binding.rvTrack.layoutManager = LinearLayoutManager(this)
-        searchAdapter.items = trackList
-        binding.rvTrack.adapter = searchAdapter
-
         binding.historyList.layoutManager = LinearLayoutManager(this)
-        binding.historyList.adapter = historyAdapter
 
         viewModel.state.observe(this) { state ->
             when (state) {
@@ -154,28 +115,21 @@ class SearchActivity : AppCompatActivity() {
             }
         }
 
-        viewModel.historyState.observe(this) { historyTracks ->
-            historyAdapter.updateItems(historyTracks)
-            binding.searchHistoryLayout.isVisible = historyTracks.isNotEmpty()
+        viewModel.isClearInputVisibile.observe(this) {
+            binding.clearIcon.isVisible = it
         }
 
 
-        searchAdapter.onItemClickListener = TrackViewHolder.OnItemClickListener {
-            searchHistoryInteractor.addToTrackHistory(it)
-            intentAudioPlayerActivity(it)
+        searchAdapter.onItemClickListener = TrackViewHolder.OnItemClickListener { track ->
+            viewModel.addToHistory(track)
+            intentAudioPlayerActivity(track)
         }
 
 
         historyAdapter.onItemClickListener = TrackViewHolder.OnItemClickListener { track ->
             viewModel.addToHistory(track)
             intentAudioPlayerActivity(track)
-            historyAdapter.updateItems(searchHistoryInteractor.getTrackHistory())
         }
-
-
-        val historyTracks = searchHistoryInteractor.getTrackHistory()
-        historyAdapter.updateItems(historyTracks)
-
 
         viewModel.hideKeyboardEvent.observe(this, Observer {
             hideKeyboard()
@@ -183,30 +137,29 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun showLoading() {
-        progressBar.isVisible = true
+        binding.progressBar.isVisible = true
         binding.rvTrack.isVisible = false
         binding.searchErrorMessage.isVisible = false
         binding.searchHistoryLayout.isVisible = false
     }
 
     private fun showTracks(tracks: List<Track>) {
-        trackList.clear()
-        trackList.addAll(tracks)
-        searchAdapter.notifyDataSetChanged()
-
-        progressBar.isVisible = false
+        binding.progressBar.isVisible = false
         binding.rvTrack.isVisible = true
         binding.searchErrorMessage.isVisible = false
         binding.searchHistoryLayout.isVisible = false
+        binding.rvTrack.adapter = searchAdapter
+        searchAdapter.items = tracks
 
     }
 
-    private fun showHistory(tracks: List<Track>) {
-
-        historyAdapter.updateItems(tracks)
+    private fun showHistory(trackList: List<Track>) {
         binding.searchHistoryLayout.isVisible = true
         binding.rvTrack.isVisible = false
         binding.searchErrorMessage.isVisible = false
+        binding.historyList.isVisible = true
+        binding.historyList.adapter = historyAdapter
+        historyAdapter.items = trackList
     }
 
     private fun showError() {
@@ -215,7 +168,7 @@ class SearchActivity : AppCompatActivity() {
         binding.searchRefreshButton.isVisible = true
         binding.searchErrorMessage.isVisible = true
         binding.rvTrack.isVisible = false
-        progressBar.isVisible = false
+        binding.progressBar.isVisible = false
         binding.searchHistoryLayout.isVisible = false
     }
 
@@ -225,22 +178,8 @@ class SearchActivity : AppCompatActivity() {
         binding.searchRefreshButton.isVisible = false
         binding.searchErrorMessage.isVisible = true
         binding.rvTrack.isVisible = false
-        progressBar.isVisible = false
+        binding.progressBar.isVisible = false
         binding.searchHistoryLayout.isVisible = false
-    }
-
-    private fun showHistoryMessage() {
-        binding.rvTrack.isVisible = false
-        binding.searchErrorMessage.isVisible = false
-        historyAdapter.updateItems(searchHistoryInteractor.getTrackHistory())
-        binding.searchHistoryLayout.isVisible = historyAdapter.items.isNotEmpty()
-
-    }
-
-    private fun showListMessage() {
-        binding.searchErrorMessage.isVisible = false
-        binding.searchHistoryLayout.isVisible = false
-        binding.rvTrack.isVisible = true
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

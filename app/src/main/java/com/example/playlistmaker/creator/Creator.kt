@@ -23,9 +23,11 @@ import com.example.playlistmaker.settings.domain.SettingsInteractor
 import com.example.playlistmaker.settings.domain.SettingsInteractorImpl
 import com.example.playlistmaker.settings.domain.SettingsRepository
 import com.example.playlistmaker.sharing.data.ExternalNavigatorImpl
+import com.example.playlistmaker.sharing.data.SharingProviderImpl
 import com.example.playlistmaker.sharing.domain.ExternalNavigator
 import com.example.playlistmaker.sharing.domain.SharingInteractor
 import com.example.playlistmaker.sharing.domain.SharingInteractorImpl
+import com.example.playlistmaker.sharing.domain.SharingProvider
 
 
 object Creator {
@@ -38,10 +40,6 @@ object Creator {
         Creator.application = application
     }
 
-    private fun getTrackRepository(): SearchRepository {
-        return SearchRepositoryImpl(RetrofitNetworkClient())
-    }
-
     fun provideTrackInteractor(): SearchInteractor {
         return SearchInteractorImpl(getTrackRepository())
     }
@@ -50,42 +48,51 @@ object Creator {
         return SearchHistoryInteractorImpl(provideSearchHistoryRepository())
     }
 
-    fun provideSearchHistoryRepository(): SearchHistoryRepository {
-        return SearchHistoryRepositoryImpl(provideSharedPreferences())
-    }
-
-    fun provideAudioPlayerRepository(): AudioPlayerRepository {
-        return AudioPlayerRepositoryImpl()
-    }
-
     fun provideAudioPlayerInteractor(): AudioPlayerInteractor {
         return AudioPlayerInteractorImpl(provideAudioPlayerRepository())
     }
 
     fun provideSharingInteractor(): SharingInteractor {
-        return SharingInteractorImpl(provideExternalNavigator())
-    }
-
-    private fun provideExternalNavigator(): ExternalNavigator {
-        return ExternalNavigatorImpl(application)
-    }
-
-    fun provadeSettingsStorage(): SettingsThemeStorage {
-        return SharedPrefsSettingsThemeStorage(provideSharedPreferences())
-
-    }
-
-    fun provideSettingsRepository(): SettingsRepository {
-        return SettingsRepositoryImpl(provadeSettingsStorage())
+        return SharingInteractorImpl(provideExternalNavigator(), provideSharingProvider())
     }
 
     fun provideSettingsInteractor(): SettingsInteractor {
         return SettingsInteractorImpl(provideSettingsRepository())
     }
 
-
     fun provideSharedPreferences(): SharedPreferences {
         return application.getSharedPreferences(PLAYLIST_MAKER_PREFERENCES, Context.MODE_PRIVATE)
+    }
+
+    private fun getTrackRepository(): SearchRepository {
+        return SearchRepositoryImpl(RetrofitNetworkClient())
+    }
+
+    private fun provideSearchHistoryRepository(): SearchHistoryRepository {
+        return SearchHistoryRepositoryImpl(provideSharedPreferences())
+    }
+
+    private fun provideAudioPlayerRepository(): AudioPlayerRepository {
+        return AudioPlayerRepositoryImpl()
+    }
+
+
+    private fun provideExternalNavigator(): ExternalNavigator {
+        return ExternalNavigatorImpl(application)
+    }
+
+    private fun provideSettingsStorage(): SettingsThemeStorage {
+        return SharedPrefsSettingsThemeStorage(provideSharedPreferences())
+
+    }
+
+    private fun provideSettingsRepository(): SettingsRepository {
+        return SettingsRepositoryImpl(provideSettingsStorage())
+    }
+
+
+    private fun provideSharingProvider(): SharingProvider {
+        return SharingProviderImpl(application)
     }
 
 }

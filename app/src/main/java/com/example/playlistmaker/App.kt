@@ -3,8 +3,8 @@ package com.example.playlistmaker
 import android.app.Application
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.content.edit
 import com.example.playlistmaker.creator.Creator
-
 
 
 class App : Application() {
@@ -15,7 +15,6 @@ class App : Application() {
         Creator.initApplication(this)
         sharedPrefs = Creator.provideSharedPreferences()
         loadThemeFromSharedPreferences()
-        context = this
     }
 
     private fun loadThemeFromSharedPreferences() {
@@ -30,19 +29,14 @@ class App : Application() {
     }
 
     fun saveThemeToSharedPreferences(isDark: Boolean) {
-        sharedPrefs.edit().putBoolean(THEME_KEY, isDark).apply()
+        sharedPrefs.edit {
+            putBoolean(THEME_KEY, isDark)
+        }
     }
+
 
     companion object {
         const val THEME_KEY = "dark_theme"
-
-
-        private lateinit var context: Application
-
-        fun getStringFromResources(resourceId: Int): String {
-            return context.getString(resourceId)
-        }
-
     }
 }
 

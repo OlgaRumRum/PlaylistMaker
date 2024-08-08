@@ -1,14 +1,13 @@
 package com.example.playlistmaker.audioPlayer.ui
 
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
-import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.databinding.ActivityAudioPlayerBinding
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.ui.SearchActivity
@@ -21,18 +20,12 @@ class AudioPlayerActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAudioPlayerBinding
 
 
-    private val audioPlayerInteractor = Creator.provideAudioPlayerInteractor()
-
     private val dateFormat by lazy {
         SimpleDateFormat("mm:ss", Locale.getDefault())
     }
 
-
-    private val viewModel by lazy {
-        ViewModelProvider(
-            this,
-            AudioPlayerViewModel.getViewModelFactory(audioPlayerInteractor)
-        )[AudioPlayerViewModel::class.java]
+    private val viewModel by viewModels<AudioPlayerViewModel> {
+        AudioPlayerViewModel.getViewModelFactory()
     }
 
 
@@ -84,12 +77,13 @@ class AudioPlayerActivity : AppCompatActivity() {
         binding.artist.text = track.artistName
         binding.trackTime.text = dateFormat.format(track.trackTimeMillis)
         binding.albumName.text = track.collectionName.ifEmpty { "" }
-        binding.yearName.text = track.releaseDate?.substring(0, 4) ?: "Unknown"
+        binding.yearName.text = viewModel.formatReleaseDate(track.releaseDate)
         binding.genreName.text = track.primaryGenreName
         binding.countryName.text = track.country
 
         Glide.with(this)
-            .load(track?.artworkUrl100?.replaceAfterLast('/', "512x512bb.jpg"))
+
+            .load(viewModel.formatArtworkUrl(track.artworkUrl100))
             .placeholder(R.drawable.placeholder)
             .centerCrop()
             .transform(RoundedCorners(applicationContext.resources.getDimensionPixelSize(R.dimen.circleRadius_artwork)))

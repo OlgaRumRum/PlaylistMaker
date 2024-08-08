@@ -1,6 +1,7 @@
 package com.example.playlistmaker.settings.data
 
 import android.content.SharedPreferences
+import androidx.core.content.edit
 import com.example.playlistmaker.settings.domain.ThemeSettings
 
 
@@ -14,9 +15,9 @@ class SharedPrefsSettingsThemeStorage(private val sharedPreferences: SharedPrefe
 
 
     override fun saveThemeSettings(settings: ThemeSettings) {
-        sharedPreferences.edit()
-            .putBoolean(THEME_KEY, settings.darkTheme)
-            .apply()
+        sharedPreferences.edit {
+            putBoolean(THEME_KEY, settings.darkTheme)
+        }
     }
 
     companion object {

@@ -10,6 +10,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.playlistmaker.audioPlayer.domain.api.AudioPlayerInteractor
 import com.example.playlistmaker.audioPlayer.domain.models.TrackInfo
+import com.example.playlistmaker.creator.Creator
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -25,8 +26,9 @@ class AudioPlayerViewModel(private val audioPlayerInteractor: AudioPlayerInterac
     private val _trackInfo = MutableLiveData(TrackInfo())
     val trackInfo: LiveData<TrackInfo> get() = _trackInfo
 
-    private val _playbackState = MutableLiveData<Int>()
+    private val _playbackState = MutableLiveData<Int>(STATE_DEFAULT)
     val playbackState: LiveData<Int> get() = _playbackState
+
 
     private val progressRunnable = object : Runnable {
         override fun run() {
@@ -40,18 +42,20 @@ class AudioPlayerViewModel(private val audioPlayerInteractor: AudioPlayerInterac
         handler.post(it)
     }
 
+
     fun preparePlayer(trackUrl: String) {
-        audioPlayerInteractor.prepareTrack(
-            trackUrl,
-            onPrepared = {
-                _playbackState.value = STATE_PREPARED
-            },
-            onCompletion = {
-                _playbackState.value = STATE_COMPLETED
-                resetTrackInfo()
-                stopProgressUpdates()
-            }
-        )
+        if (playbackState.value == STATE_DEFAULT)
+            audioPlayerInteractor.prepareTrack(
+                trackUrl,
+                onPrepared = {
+                    _playbackState.value = STATE_PREPARED
+                },
+                onCompletion = {
+                    _playbackState.value = STATE_COMPLETED
+                    resetTrackInfo()
+                    stopProgressUpdates()
+                }
+            )
     }
 
     fun startPlayer() {
@@ -77,6 +81,14 @@ class AudioPlayerViewModel(private val audioPlayerInteractor: AudioPlayerInterac
         releasePlayer()
     }
 
+    fun formatReleaseDate(releaseDate: String?): String {
+        return releaseDate?.substring(0, 4) ?: "Unknown"
+    }
+
+    fun formatArtworkUrl(artworkUrl: String?): String? {
+        return artworkUrl?.replaceAfterLast('/', "512x512bb.jpg")
+    }
+
     private fun resetTrackInfo() {
         _trackInfo.value = TrackInfo(currentPosition = "00:00")
     }
@@ -86,6 +98,7 @@ class AudioPlayerViewModel(private val audioPlayerInteractor: AudioPlayerInterac
     }
 
     companion object {
+        const val STATE_DEFAULT = 0
         const val STATE_PREPARED = 1
         const val STATE_PLAYING = 2
         const val STATE_PAUSED = 3
@@ -93,11 +106,16 @@ class AudioPlayerViewModel(private val audioPlayerInteractor: AudioPlayerInterac
 
         private const val TIMER_UPDATE_INTERVAL = 300L
 
-        fun getViewModelFactory(interactor: AudioPlayerInteractor): ViewModelProvider.Factory =
-            viewModelFactory {
+
+        fun getViewModelFactory(): ViewModelProvider.Factory {
+            return viewModelFactory {
                 initializer {
-                    AudioPlayerViewModel(interactor)
+                    AudioPlayerViewModel(
+                        audioPlayerInteractor = Creator.provideAudioPlayerInteractor()
+                    )
                 }
             }
+
+        }
     }
 }
