@@ -19,7 +19,7 @@
 
 
     <Button
-        android:id="@+id/search_button"
+        android:id="@+id/searchButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/search_button"
@@ -27,7 +27,7 @@
         style="@style/ButtonMainStyle" />
 
     <Button
-        android:id="@+id/library_button"
+        android:id="@+id/mediaButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/library_button"
@@ -35,7 +35,7 @@
         style="@style/ButtonMainStyle" />
 
     <Button
-        android:id="@+id/settings_button"
+        android:id="@+id/settingsButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/settings_button"
