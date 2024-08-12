@@ -11,7 +11,6 @@ class SettingsRepositoryImpl(private val storage: SettingsThemeStorage) : Settin
         return ThemeSettings(isDark)
     }
 
-
     override fun updateThemeSetting(settings: ThemeSettings) {
         storage.saveThemeSettings(settings)
     }

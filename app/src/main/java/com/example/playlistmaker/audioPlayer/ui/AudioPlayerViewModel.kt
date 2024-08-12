@@ -5,12 +5,8 @@ import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.playlistmaker.audioPlayer.domain.api.AudioPlayerInteractor
 import com.example.playlistmaker.audioPlayer.domain.models.TrackInfo
-import com.example.playlistmaker.creator.Creator
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -107,15 +103,5 @@ class AudioPlayerViewModel(private val audioPlayerInteractor: AudioPlayerInterac
         private const val TIMER_UPDATE_INTERVAL = 300L
 
 
-        fun getViewModelFactory(): ViewModelProvider.Factory {
-            return viewModelFactory {
-                initializer {
-                    AudioPlayerViewModel(
-                        audioPlayerInteractor = Creator.provideAudioPlayerInteractor()
-                    )
-                }
-            }
-
-        }
     }
 }

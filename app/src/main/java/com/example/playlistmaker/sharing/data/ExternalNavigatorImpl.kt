@@ -1,12 +1,12 @@
 package com.example.playlistmaker.sharing.data
 
-import android.app.Application
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import com.example.playlistmaker.sharing.domain.EmailData
 import com.example.playlistmaker.sharing.domain.ExternalNavigator
 
-class ExternalNavigatorImpl(private val application: Application) : ExternalNavigator {
+class ExternalNavigatorImpl(private val application: Context) : ExternalNavigator {
 
     override fun shareLink(shareText: String) {
         Intent().apply {

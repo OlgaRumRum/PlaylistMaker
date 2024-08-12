@@ -1,7 +1,6 @@
 package com.example.playlistmaker.audioPlayer.ui
 
 import android.os.Bundle
-import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -11,6 +10,7 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivityAudioPlayerBinding
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.ui.SearchActivity
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -24,9 +24,8 @@ class AudioPlayerActivity : AppCompatActivity() {
         SimpleDateFormat("mm:ss", Locale.getDefault())
     }
 
-    private val viewModel by viewModels<AudioPlayerViewModel> {
-        AudioPlayerViewModel.getViewModelFactory()
-    }
+
+    private val viewModel by viewModel<AudioPlayerViewModel>()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
