@@ -69,6 +69,12 @@ class AudioPlayerActivity : AppCompatActivity() {
                 }
             }
         })
+
+    }
+
+    override fun onStop() {
+        super.onStop()
+        viewModel.pausePlayer()
     }
 
     private fun setupUI(track: Track) {
@@ -108,7 +114,6 @@ class AudioPlayerActivity : AppCompatActivity() {
                 viewModel.startPlayer()
         }
     }
-
 
 }
 
