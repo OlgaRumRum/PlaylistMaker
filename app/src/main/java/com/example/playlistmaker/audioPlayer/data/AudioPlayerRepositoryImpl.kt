@@ -2,9 +2,8 @@ package com.example.playlistmaker.audioPlayer.data
 
 import com.example.playlistmaker.audioPlayer.domain.api.AudioPlayerRepository
 
-class AudioPlayerRepositoryImpl() : AudioPlayerRepository {
+class AudioPlayerRepositoryImpl(private val audioPlayer: AudioPlayer) : AudioPlayerRepository {
 
-    private val audioPlayer = AudioPlayerImpl()
 
     override fun prepare(trackUrl: String, onPrepared: () -> Unit, onCompletion: () -> Unit) {
         audioPlayer.prepare(trackUrl, onPrepared, onCompletion)

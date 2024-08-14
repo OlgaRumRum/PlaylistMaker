@@ -9,13 +9,15 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
 
-class SearchHistoryRepositoryImpl(private val sharedPreferences: SharedPreferences) :
-    SearchHistoryRepository {
+class SearchHistoryRepositoryImpl(
+    private val sharedPreferences: SharedPreferences,
+    private val gson: Gson
+) : SearchHistoryRepository {
 
     override fun getTrackHistory(): List<Track> {
         val json = sharedPreferences.getString(HISTORY_KEY, null) ?: return listOf()
         val type = object : TypeToken<ArrayList<Track>>() {}.type
-        return Gson().fromJson(json, type)
+        return gson.fromJson(json, type)
     }
 
 
@@ -26,7 +28,7 @@ class SearchHistoryRepositoryImpl(private val sharedPreferences: SharedPreferenc
         if (tracks.size > MAX_TRACK_HISTORY) {
             tracks.removeLast()
         }
-        val json = Gson().toJson(tracks)
+        val json = gson.toJson(tracks)
         sharedPreferences.edit()
             .putString(HISTORY_KEY, json)
             .apply()

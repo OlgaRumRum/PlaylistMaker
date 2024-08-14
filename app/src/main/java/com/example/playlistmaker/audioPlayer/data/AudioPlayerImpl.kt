@@ -2,8 +2,7 @@ package com.example.playlistmaker.audioPlayer.data
 
 import android.media.MediaPlayer
 
-class AudioPlayerImpl : AudioPlayer {
-    private val mediaPlayer = MediaPlayer()
+class AudioPlayerImpl(private val mediaPlayer: MediaPlayer) : AudioPlayer {
 
     override fun prepare(trackUrl: String, onPrepared: () -> Unit, onCompletion: () -> Unit) {
         mediaPlayer.setDataSource(trackUrl)

@@ -1,43 +1,40 @@
 package com.example.playlistmaker
 
 import android.app.Application
-import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.content.edit
-import com.example.playlistmaker.creator.Creator
+import com.example.playlistmaker.di.dataModule
+import com.example.playlistmaker.di.interactorModule
+import com.example.playlistmaker.di.repositoryModule
+import com.example.playlistmaker.di.viewModelModule
+import com.example.playlistmaker.settings.data.SettingsThemeStorage
+import org.koin.android.ext.android.inject
+import org.koin.android.ext.koin.androidContext
+import org.koin.android.ext.koin.androidLogger
+import org.koin.core.context.startKoin
 
 
 class App : Application() {
-    private lateinit var sharedPrefs: SharedPreferences
-
     override fun onCreate() {
         super.onCreate()
-        Creator.initApplication(this)
-        sharedPrefs = Creator.provideSharedPreferences()
-        loadThemeFromSharedPreferences()
-    }
 
-    private fun loadThemeFromSharedPreferences() {
-        val isDark = sharedPrefs.getBoolean(THEME_KEY, false)
+        startKoin {
+            androidLogger()
+            androidContext(this@App)
+            modules(listOf(dataModule, interactorModule, repositoryModule, viewModelModule))
+        }
+
+        val settingsThemeStorage: SettingsThemeStorage by inject()
+        val themeSettings = settingsThemeStorage.getThemeSettings()
+
         AppCompatDelegate.setDefaultNightMode(
-            if (isDark) {
+            if (themeSettings.darkTheme) {
                 AppCompatDelegate.MODE_NIGHT_YES
             } else {
                 AppCompatDelegate.MODE_NIGHT_NO
             }
         )
     }
-
-    fun saveThemeToSharedPreferences(isDark: Boolean) {
-        sharedPrefs.edit {
-            putBoolean(THEME_KEY, isDark)
-        }
-    }
-
-
-    companion object {
-        const val THEME_KEY = "dark_theme"
-    }
 }
+
 
 

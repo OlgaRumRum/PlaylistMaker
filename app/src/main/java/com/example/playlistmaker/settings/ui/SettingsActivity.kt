@@ -2,19 +2,16 @@ package com.example.playlistmaker.settings.ui
 
 
 import android.os.Bundle
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import com.example.playlistmaker.App
 import com.example.playlistmaker.databinding.ActivitySettingsBinding
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SettingsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySettingsBinding
 
-    private val viewModel by viewModels<SettingsViewModel> {
-        SettingsViewModel.getViewModelFactory()
-    }
+    private val viewModel by viewModel<SettingsViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,7 +31,6 @@ class SettingsActivity : AppCompatActivity() {
 
         binding.themeSwitcher.setOnCheckedChangeListener { _, isChecked ->
             viewModel.updateThemeSettings(isChecked)
-            (application as App).saveThemeToSharedPreferences(isChecked)
             AppCompatDelegate.setDefaultNightMode(
                 if (isChecked) {
                     AppCompatDelegate.MODE_NIGHT_YES
