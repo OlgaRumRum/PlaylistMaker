@@ -65,5 +65,13 @@
         <item name="android:layout_marginBottom">@dimen/padding</item>
     </style>
 
+    <style name="ErrorText">
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textSize">@dimen/error_text_size</item>
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+        <item name="android:layout_marginTop">@dimen/padding</item>
+        <item name="android:gravity">center</item>
+    </style>
+
 
 </resources>

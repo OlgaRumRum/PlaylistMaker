@@ -16,15 +16,15 @@ val repositoryModule = module {
         AudioPlayerRepositoryImpl(get())
     }
 
-    factory<SearchRepository> {
+    single<SearchRepository> {
         SearchRepositoryImpl(get())
     }
 
-    factory<SearchHistoryRepository> {
+    single<SearchHistoryRepository> {
         SearchHistoryRepositoryImpl(get(), get())
     }
 
-    factory<SettingsRepository> {
+    single<SettingsRepository> {
         SettingsRepositoryImpl(get())
     }
 
