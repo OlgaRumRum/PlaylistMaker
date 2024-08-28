@@ -8,13 +8,14 @@ import com.google.android.material.tabs.TabLayoutMediator
 
 class MediaActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityMediaBinding
-    private lateinit var tabMediator: TabLayoutMediator
+    private var _binding: ActivityMediaBinding? = null
+    private val binding get() = _binding!!
 
+    private lateinit var tabMediator: TabLayoutMediator
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMediaBinding.inflate(layoutInflater)
+        _binding = ActivityMediaBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         binding.mediaViewPager.adapter = MediaViewPagerAdapter(supportFragmentManager, lifecycle)
@@ -33,5 +34,6 @@ class MediaActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         tabMediator.detach()
+        _binding = null
     }
 }
