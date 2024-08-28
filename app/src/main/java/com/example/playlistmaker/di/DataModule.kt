@@ -33,7 +33,7 @@ val dataModule = module {
         RetrofitNetworkClient(get())
     }
 
-    factory { Gson() }
+    single { Gson() }
 
     single<SharedPreferences> {
         androidContext()

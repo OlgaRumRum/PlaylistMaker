@@ -18,19 +18,19 @@ val interactorModule = module {
         AudioPlayerInteractorImpl(get())
     }
 
-    factory<SearchInteractor> {
+    single<SearchInteractor> {
         SearchInteractorImpl(get())
     }
 
-    factory<SearchHistoryInteractor> {
+    single<SearchHistoryInteractor> {
         SearchHistoryInteractorImpl(get())
     }
 
-    factory<SettingsInteractor> {
+    single<SettingsInteractor> {
         SettingsInteractorImpl(get())
     }
 
-    factory<SharingInteractor> {
+    single<SharingInteractor> {
         SharingInteractorImpl(get(), get())
     }
 

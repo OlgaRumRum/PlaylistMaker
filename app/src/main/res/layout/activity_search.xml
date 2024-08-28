@@ -96,20 +96,16 @@
                 android:contentDescription="@string/Error" />
 
             <TextView
+                style="@style/ErrorText"
                 android:id="@+id/searchErrorText"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/padding"
-                android:fontFamily="@font/ys_display_medium"
-                android:textSize="@dimen/error_text_size"
-                android:textColor="?attr/colorOnPrimary"
-                android:gravity="center" />
+                android:layout_height="wrap_content" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/searchRefreshButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="@dimen/media_placeholder_margin_top"
                 android:visibility="gone"
                 android:backgroundTint="?attr/colorOnPrimary"
                 app:cornerRadius="@dimen/placeholder_button_corner_radius"

@@ -29,5 +29,8 @@
     <dimen name="audio_player_margin">24dp</dimen>
     <dimen name="progressBar_size">44dp</dimen>
     <dimen name="progressBar_marginTop">140dp</dimen>
+    <dimen name="tabLayout_height">48dp</dimen>
+    <dimen name="media_placeholder_margin_top">106dp</dimen>
+    <dimen name="placeholder_button_margin_top">24dp</dimen>
 
 </resources>

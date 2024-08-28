@@ -43,4 +43,12 @@
 
     <string name="track_not_found_error">Еrror: track not found</string>
     <string name="Button_Ok">OK</string>
+
+    <string name="media_library">Media library</string>
+    <string name="media_empty">Your media library is empty</string>
+    <string name="no_playlists">You haven\'t created\nany playlist</string>
+    <string name="favorite_tracks">Favorite tracks</string>
+    <string name="playlists">Playlists</string>
+    <string name="new_playlist">New playlist</string>
+
 </resources>

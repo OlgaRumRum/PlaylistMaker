@@ -43,4 +43,12 @@
     <string name="track_not_found_error">Ошибка: трек не найден.</string>
     <string name="Button_Ok">OK</string>
 
+    <string name="media_library">Медиатека</string>
+    <string name="media_empty">Ваша медиатека пуста</string>
+    <string name="no_playlists">Вы не создали\nни одного плейлиста</string>
+    <string name="favorite_tracks">Избранные треки</string>
+    <string name="playlists">Плейлисты</string>
+    <string name="new_playlist">Новый плейлист</string>
+
+
 </resources>
