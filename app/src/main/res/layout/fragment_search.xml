@@ -6,16 +6,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:background="?attr/colorPrimaryVariant"
     android:orientation="vertical"
-    >
+    tools:context="com.example.playlistmaker.search.ui.SearchFragment">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar_search"
+    <TextView
+        style="@style/TitleManuStyle"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/toolbar_height"
-        android:layout_marginBottom="@dimen/small_padding"
-        app:navigationIcon="@drawable/arrow_back"
-        app:title="@string/search_button"
-        style="@style/ToolbarStyle" />
+        android:layout_height="wrap_content"
+        android:text="@string/search_button" />
 
     <FrameLayout
         android:layout_width="match_parent"

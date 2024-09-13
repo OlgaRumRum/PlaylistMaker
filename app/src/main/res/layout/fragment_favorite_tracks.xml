@@ -2,9 +2,11 @@
 
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/media_favorite_tracks"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context="com.example.playlistmaker.media.ui.FavoriteTracksFragment">
 
     <ImageView
         android:id="@+id/media_placeholder_iv"

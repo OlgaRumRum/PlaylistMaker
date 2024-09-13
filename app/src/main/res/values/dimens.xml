@@ -32,5 +32,9 @@
     <dimen name="tabLayout_height">48dp</dimen>
     <dimen name="media_placeholder_margin_top">106dp</dimen>
     <dimen name="placeholder_button_margin_top">24dp</dimen>
+    <dimen name="bottom_navigation_view_text_size">12sp</dimen>
+    <dimen name="title_margin_top">10dp</dimen>
+    <dimen name="title_padding">12dp</dimen>
+
 
 </resources>

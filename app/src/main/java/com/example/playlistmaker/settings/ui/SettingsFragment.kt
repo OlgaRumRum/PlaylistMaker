@@ -2,29 +2,35 @@ package com.example.playlistmaker.settings.ui
 
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatDelegate
-import com.example.playlistmaker.databinding.ActivitySettingsBinding
+import androidx.fragment.app.Fragment
+import com.example.playlistmaker.databinding.FragmentSettingsBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SettingsActivity : AppCompatActivity() {
+class SettingsFragment : Fragment() {
 
-    private lateinit var binding: ActivitySettingsBinding
+
+    private var _binding: FragmentSettingsBinding? = null
+    private val binding get() = _binding!!
 
     private val viewModel by viewModel<SettingsViewModel>()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        _binding = FragmentSettingsBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
-        binding = ActivitySettingsBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-
-        binding.toolbarArrowBack.setNavigationOnClickListener {
-            onBackPressedDispatcher.onBackPressed()
-        }
-
-        viewModel.themeSettings.observe(this) { settings ->
+        viewModel.themeSettings.observe(viewLifecycleOwner) { settings ->
             binding.themeSwitcher.isChecked = settings.darkTheme
         }
 
@@ -53,7 +59,10 @@ class SettingsActivity : AppCompatActivity() {
         binding.userAgreement.setOnClickListener {
             viewModel.openTerms()
         }
+
+
     }
+
 }
 
 
