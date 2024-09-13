@@ -12,7 +12,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 class MediaFragment : Fragment() {
 
     private var _binding: FragmentMediaBinding? = null
-    private val binding get() = _binding!!
+    private val binding get() = requireNotNull(_binding) { "Binding is not initialized" }
 
     private lateinit var tabMediator: TabLayoutMediator
 

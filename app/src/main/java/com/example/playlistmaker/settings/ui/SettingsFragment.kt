@@ -14,7 +14,7 @@ class SettingsFragment : Fragment() {
 
 
     private var _binding: FragmentSettingsBinding? = null
-    private val binding get() = _binding!!
+    private val binding get() = requireNotNull(_binding) { "Binding is not initialized" }
 
     private val viewModel by viewModel<SettingsViewModel>()
 

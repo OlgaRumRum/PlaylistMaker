@@ -29,6 +29,12 @@ class TrackAdapter : RecyclerView.Adapter<TrackViewHolder>() {
         diffResult.dispatchUpdatesTo(this)
     }
 
+    fun clear() {
+        items = emptyList()  // Очищаем список
+        notifyDataSetChanged() // Уведомляем адаптер об изменениях
+    }
+
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
         val binding = TrackItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return TrackViewHolder(binding)

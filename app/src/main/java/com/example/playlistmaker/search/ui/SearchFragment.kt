@@ -15,7 +15,6 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
 import com.example.playlistmaker.audioPlayer.ui.AudioPlayerActivity
@@ -32,7 +31,7 @@ class SearchFragment : Fragment() {
 
 
     private var _binding: FragmentSearchBinding? = null
-    private val binding get() = _binding!!
+    private val binding get() = requireNotNull(_binding) { "Binding is not initialized" }
 
 
     private var searchAdapter = TrackAdapter()
@@ -62,6 +61,7 @@ class SearchFragment : Fragment() {
 
         binding.clearIcon.setOnClickListener {
             binding.inputEditText.setText("")
+            searchAdapter.clear()
             hideKeyboard()
         }
 
@@ -69,7 +69,6 @@ class SearchFragment : Fragment() {
 
         binding.searchRefreshButton.setOnClickListener {
             viewModel.repeatRequest()
-            viewModel.hideKeyboard()
         }
 
 
@@ -97,7 +96,6 @@ class SearchFragment : Fragment() {
             }
 
             override fun afterTextChanged(s: Editable?) {
-                hideKeyboard()
             }
         }
         textWatcher?.let { binding.inputEditText.addTextChangedListener(it) }
@@ -142,9 +140,6 @@ class SearchFragment : Fragment() {
             intentAudioPlayerActivity(track)
         }
 
-        viewModel.hideKeyboardEvent.observe(viewLifecycleOwner, Observer {
-            hideKeyboard()
-        })
 
     }
 
