@@ -11,11 +11,11 @@
         <item name="colorOnSecondary">@color/white</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
-
         <item name="toolbarNavigationButtonStyle">@style/TintedNavigation</item>
         <item name="colorControlActivated">@color/blue</item>
-
         <item name="editTextColor">@color/Charcoal</item>
+
+
         <!-- Customize your theme here. -->
     </style>
 

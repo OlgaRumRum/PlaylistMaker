@@ -9,7 +9,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivityAudioPlayerBinding
 import com.example.playlistmaker.search.domain.models.Track
-import com.example.playlistmaker.search.ui.SearchActivity
+import com.example.playlistmaker.search.ui.SearchFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -34,12 +34,10 @@ class AudioPlayerActivity : AppCompatActivity() {
         binding = ActivityAudioPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.toolbar.setOnClickListener {
-            finish()
-        }
+        binding.toolbar.setNavigationOnClickListener { finish() }
 
 
-        val track: Track? = intent.getParcelableExtra(SearchActivity.TRACK_KEY)
+        val track: Track? = intent.getParcelableExtra(SearchFragment.TRACK_KEY)
 
         if (track != null) {
             setupUI(track)

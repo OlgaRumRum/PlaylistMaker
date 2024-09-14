@@ -1,33 +1,37 @@
 package com.example.playlistmaker.search.ui
 
 
-
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.text.Editable
+import android.text.TextWatcher
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import androidx.core.widget.addTextChangedListener
-import androidx.lifecycle.Observer
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
 import com.example.playlistmaker.audioPlayer.ui.AudioPlayerActivity
-import com.example.playlistmaker.databinding.ActivitySearchBinding
+import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.search.domain.models.Track
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-class SearchActivity : AppCompatActivity() {
+class SearchFragment : Fragment() {
 
 
     private var text: String = ""
     private var input = ""
 
-    private lateinit var binding: ActivitySearchBinding
+
+    private var _binding: FragmentSearchBinding? = null
+    private val binding get() = requireNotNull(_binding) { "Binding is not initialized" }
 
 
     private var searchAdapter = TrackAdapter()
@@ -38,24 +42,26 @@ class SearchActivity : AppCompatActivity() {
 
     private val handler = Handler(Looper.getMainLooper())
 
+    private lateinit var textWatcher: TextWatcher
+
 
     private val viewModel by viewModel<SearchViewModel>()
 
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        _binding = FragmentSearchBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        binding = ActivitySearchBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-
-        binding.toolbarSearch.setNavigationOnClickListener {
-            onBackPressedDispatcher.onBackPressed()
-        }
-
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         binding.clearIcon.setOnClickListener {
             binding.inputEditText.setText("")
+            searchAdapter.clear()
             hideKeyboard()
         }
 
@@ -63,7 +69,6 @@ class SearchActivity : AppCompatActivity() {
 
         binding.searchRefreshButton.setOnClickListener {
             viewModel.repeatRequest()
-            viewModel.hideKeyboard()
         }
 
 
@@ -78,16 +83,22 @@ class SearchActivity : AppCompatActivity() {
         }
 
 
-        binding.inputEditText.addTextChangedListener(
-            onTextChanged = { charSequence, _, _, _ ->
+        textWatcher = object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 viewModel.changeInputEditTextState(
                     binding.inputEditText.hasFocus(),
-                    charSequence.toString()
+                    s.toString()
                 )
-                input = charSequence.toString()
+                input = s.toString()
             }
-        )
 
+            override fun afterTextChanged(s: Editable?) {
+            }
+        }
+        textWatcher?.let { binding.inputEditText.addTextChangedListener(it) }
 
 
         binding.inputEditText.setOnEditorActionListener { _, actionId, _ ->
@@ -99,10 +110,10 @@ class SearchActivity : AppCompatActivity() {
         }
 
 
-        binding.rvTrack.layoutManager = LinearLayoutManager(this)
-        binding.historyList.layoutManager = LinearLayoutManager(this)
+        binding.rvTrack.layoutManager = LinearLayoutManager(requireContext())
+        binding.historyList.layoutManager = LinearLayoutManager(requireContext())
 
-        viewModel.state.observe(this) { state ->
+        viewModel.state.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is SearchState.Loading -> showLoading()
                 is SearchState.SearchList -> showTracks(state.tracks)
@@ -113,7 +124,7 @@ class SearchActivity : AppCompatActivity() {
             }
         }
 
-        viewModel.isClearInputVisibile.observe(this) {
+        viewModel.isClearInputVisibile.observe(viewLifecycleOwner) {
             binding.clearIcon.isVisible = it
         }
 
@@ -129,10 +140,14 @@ class SearchActivity : AppCompatActivity() {
             intentAudioPlayerActivity(track)
         }
 
-        viewModel.hideKeyboardEvent.observe(this, Observer {
-            hideKeyboard()
-        })
+
     }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        textWatcher?.let { binding.inputEditText.removeTextChangedListener(it) }
+    }
+
 
     private fun showLoading() {
         binding.progressBar.isVisible = true
@@ -185,24 +200,32 @@ class SearchActivity : AppCompatActivity() {
         outState.putString(INPUT, text)
     }
 
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-        text = savedInstanceState.getString(INPUT).toString()
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        savedInstanceState?.let {
+            text = it.getString(INPUT, "")
+        }
     }
 
     private fun hideKeyboard() {
-        val inputMethodManager =
-            getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        inputMethodManager.hideSoftInputFromWindow(binding.inputEditText.windowToken, 0)
+        val view =
+            requireActivity().currentFocus
+        if (view != null) {
+            val imm =
+                requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(view.windowToken, 0)
+        }
     }
 
     private fun intentAudioPlayerActivity(track: Track) {
         if (clickDebounce()) {
-            val intent = Intent(this@SearchActivity, AudioPlayerActivity::class.java)
+            val intent = Intent(requireContext(), AudioPlayerActivity::class.java)
             intent.putExtra(TRACK_KEY, track)
             startActivity(intent)
         }
     }
+
 
     private fun clickDebounce(): Boolean {
         val current = isClickAllowed

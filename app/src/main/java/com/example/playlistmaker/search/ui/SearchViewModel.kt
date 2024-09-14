@@ -34,9 +34,6 @@ class SearchViewModel(
     val isClearInputVisibile: LiveData<Boolean> get() = _isClearInputVisibile
 
 
-    private val _hideKeyboardEvent = MutableLiveData<Unit>()
-    val hideKeyboardEvent: LiveData<Unit> get() = _hideKeyboardEvent
-
 
     private fun renderState(state: SearchState) {
         _state.postValue(state)
@@ -82,9 +79,6 @@ class SearchViewModel(
         }
     }
 
-    fun hideKeyboard() {
-        _hideKeyboardEvent.postValue(Unit)
-    }
 
 
     override fun onCleared() {
@@ -92,11 +86,10 @@ class SearchViewModel(
     }
 
 
-    fun searchDebounce(changedText: String) {
+    private fun searchDebounce(changedText: String) {
         latestSearchText = changedText
         handler.removeCallbacks(searchRunnable)
         handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
-        hideKeyboard()
     }
 
 

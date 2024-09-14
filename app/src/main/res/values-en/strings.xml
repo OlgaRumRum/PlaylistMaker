@@ -3,7 +3,7 @@
     <string name="app_name">Playlist Maker</string>
     <string name="title_hello">Playlist maker</string>
     <string name="search_button">Search</string>
-    <string name="library_button">Media</string>
+    <string name="media_button">Media</string>
     <string name="settings_button">Settings</string>
     <string name="dark_theme">Dark theme</string>
     <string name="share_the_app">Share the app</string>
