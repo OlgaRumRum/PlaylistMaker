@@ -1,14 +1,16 @@
 package com.example.playlistmaker.search.ui
 
 
-import android.os.Handler
-import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.search.domain.api.SearchHistoryInteractor
 import com.example.playlistmaker.search.domain.api.SearchInteractor
 import com.example.playlistmaker.search.domain.models.Track
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 
 class SearchViewModel(
@@ -16,12 +18,7 @@ class SearchViewModel(
     private val searchHistoryInteractor: SearchHistoryInteractor
 ) : ViewModel() {
 
-    private val handler = Handler(Looper.getMainLooper())
-
-    private val searchRunnable = Runnable {
-        val newSearchText = latestSearchText
-        search(newSearchText)
-    }
+    private var searchJob: Job? = null
 
     private var latestSearchText: String = ""
 
@@ -34,7 +31,6 @@ class SearchViewModel(
     val isClearInputVisibile: LiveData<Boolean> get() = _isClearInputVisibile
 
 
-
     private fun renderState(state: SearchState) {
         _state.postValue(state)
     }
@@ -43,61 +39,53 @@ class SearchViewModel(
         if (newSearchText.isNotEmpty()) {
             renderState(SearchState.Loading)
 
-            searchInteractor.search(newSearchText, object : SearchInteractor.SearchConsumer {
-                override fun consume(foundTracks: List<Track>?, errorMessage: String?) {
+            viewModelScope.launch {
+                searchInteractor.search(newSearchText).collect { (foundTracks, errorMessage) ->
                     if (foundTracks != null) {
                         trackList.clear()
                         trackList.addAll(foundTracks)
-
-
                     }
 
                     when {
                         errorMessage != null -> {
-
-                            renderState(
-                                SearchState.Error(errorMessage = errorMessage)
-                            )
-
+                            renderState(SearchState.Error(errorMessage = errorMessage))
                         }
-
                         trackList.isEmpty() -> {
-                            renderState(
-                                SearchState.Empty(
-                                    emptyMessage = "Nothing was found"
-                                )
-                            )
+                            renderState(SearchState.Empty(emptyMessage = "Nothing was found"))
                         }
-
                         else -> {
                             renderState(SearchState.SearchList(tracks = trackList))
                         }
                     }
-
                 }
-            })
+            }
         }
     }
 
 
-
     override fun onCleared() {
-        handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
+        super.onCleared()
+        searchJob?.cancel()
     }
 
 
     private fun searchDebounce(changedText: String) {
         latestSearchText = changedText
-        handler.removeCallbacks(searchRunnable)
-        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
-    }
 
+        searchJob?.cancel()
+
+        searchJob = viewModelScope.launch {
+            delay(SEARCH_DEBOUNCE_DELAY)
+            if (latestSearchText == changedText) {
+                search(latestSearchText)
+            }
+        }
+    }
 
     fun changeInputEditTextState(focus: Boolean, input: String) {
         val searchHistory = searchHistoryInteractor.getTrackHistory()
         _isClearInputVisibile.value = input.isNotEmpty()
         if (focus && input.isEmpty() && searchHistory.isNotEmpty()) {
-            handler.removeCallbacks(searchRunnable)
             _state.value = SearchState.HistoryList(searchHistory)
         } else {
             searchDebounce(input)
@@ -122,11 +110,10 @@ class SearchViewModel(
         search(latestSearchText)
     }
 
-
     companion object {
-        private val SEARCH_REQUEST_TOKEN = Any()
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
 
     }
 
 }
+
