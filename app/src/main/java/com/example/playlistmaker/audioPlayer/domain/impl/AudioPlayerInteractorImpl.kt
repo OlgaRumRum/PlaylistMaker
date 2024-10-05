@@ -6,7 +6,7 @@ import com.example.playlistmaker.audioPlayer.domain.api.AudioPlayerRepository
 class AudioPlayerInteractorImpl(private val audioPlayerRepository: AudioPlayerRepository) :
     AudioPlayerInteractor {
 
-    override suspend fun prepareTrack(
+    override fun prepareTrack(
         trackUrl: String,
         onPrepared: () -> Unit,
         onCompletion: () -> Unit

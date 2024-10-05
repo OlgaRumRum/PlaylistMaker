@@ -1,6 +1,5 @@
 package com.example.playlistmaker.audioPlayer.ui
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -32,24 +31,20 @@ class AudioPlayerViewModel(private val audioPlayerInteractor: AudioPlayerInterac
         startProgressUpdates()
     }
 
+
     fun preparePlayer(trackUrl: String) {
-        if (playbackState.value == STATE_DEFAULT) {
-            viewModelScope.launch {
-                try {
-                    audioPlayerInteractor.prepareTrack(trackUrl,
-                        onPrepared = {
-                            _playbackState.value = STATE_PREPARED
-                        },
-                        onCompletion = {
-                            _playbackState.value = STATE_COMPLETED
-                            resetTrackInfo()
-                            stopProgressUpdates()
-                        })
-                } catch (e: Exception) {
-                    Log.e("AudioPlayerViewModel", "Error preparing track: ${e.message}")
+        if (playbackState.value == STATE_DEFAULT)
+            audioPlayerInteractor.prepareTrack(
+                trackUrl,
+                onPrepared = {
+                    _playbackState.value = STATE_PREPARED
+                },
+                onCompletion = {
+                    _playbackState.value = STATE_COMPLETED
+                    resetTrackInfo()
+                    stopProgressUpdates()
                 }
-            }
-        }
+            )
     }
 
 
