@@ -1,19 +1,19 @@
 package com.example.playlistmaker.audioPlayer.ui
 
-import android.os.Handler
-import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.audioPlayer.domain.api.AudioPlayerInteractor
 import com.example.playlistmaker.audioPlayer.domain.models.TrackInfo
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 
 class AudioPlayerViewModel(private val audioPlayerInteractor: AudioPlayerInteractor) : ViewModel() {
-
-    private val handler = Handler(Looper.getMainLooper())
 
     private val dateFormat by lazy {
         SimpleDateFormat("mm:ss", Locale.getDefault())
@@ -25,17 +25,10 @@ class AudioPlayerViewModel(private val audioPlayerInteractor: AudioPlayerInterac
     private val _playbackState = MutableLiveData<Int>(STATE_DEFAULT)
     val playbackState: LiveData<Int> get() = _playbackState
 
+    private var job: Job? = null
 
-    private val progressRunnable = object : Runnable {
-        override fun run() {
-            if (audioPlayerInteractor.isPlaying()) {
-                val formattedTime = dateFormat.format(audioPlayerInteractor.getPlaybackPosition())
-                _trackInfo.value = _trackInfo.value?.copy(currentPosition = formattedTime)
-                handler.postDelayed(this, TIMER_UPDATE_INTERVAL)
-            }
-        }
-    }.also {
-        handler.post(it)
+    init {
+        startProgressUpdates()
     }
 
 
@@ -54,10 +47,11 @@ class AudioPlayerViewModel(private val audioPlayerInteractor: AudioPlayerInterac
             )
     }
 
+
     fun startPlayer() {
         audioPlayerInteractor.startPlayback()
         _playbackState.value = STATE_PLAYING
-        handler.post(progressRunnable)
+        startProgressUpdates()
     }
 
     fun pausePlayer() {
@@ -66,10 +60,27 @@ class AudioPlayerViewModel(private val audioPlayerInteractor: AudioPlayerInterac
         stopProgressUpdates()
     }
 
-
     fun releasePlayer() {
         audioPlayerInteractor.releasePlayer()
         stopProgressUpdates()
+    }
+
+    private fun startProgressUpdates() {
+        stopProgressUpdates()
+
+        job = viewModelScope.launch {
+            while (audioPlayerInteractor.isPlaying()) {
+                val currentPosition = audioPlayerInteractor.getPlaybackPosition()
+                val formattedTime = dateFormat.format(currentPosition)
+                _trackInfo.value = _trackInfo.value?.copy(currentPosition = formattedTime)
+                delay(TIMER_UPDATE_INTERVAL)
+            }
+        }
+    }
+
+    private fun stopProgressUpdates() {
+        job?.cancel()
+        job = null
     }
 
     override fun onCleared() {
@@ -89,10 +100,6 @@ class AudioPlayerViewModel(private val audioPlayerInteractor: AudioPlayerInterac
         _trackInfo.value = TrackInfo(currentPosition = "00:00")
     }
 
-    private fun stopProgressUpdates() {
-        progressRunnable.let { handler.removeCallbacks(it) }
-    }
-
     companion object {
         const val STATE_DEFAULT = 0
         const val STATE_PREPARED = 1
@@ -101,7 +108,5 @@ class AudioPlayerViewModel(private val audioPlayerInteractor: AudioPlayerInterac
         const val STATE_COMPLETED = 4
 
         private const val TIMER_UPDATE_INTERVAL = 300L
-
-
     }
 }
