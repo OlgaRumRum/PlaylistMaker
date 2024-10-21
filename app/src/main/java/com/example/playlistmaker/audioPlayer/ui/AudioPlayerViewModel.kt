@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.audioPlayer.domain.api.AudioPlayerInteractor
 import com.example.playlistmaker.audioPlayer.domain.models.TrackInfo
+import com.example.playlistmaker.media.domain.db.FavoriteTracksInteractor
+import com.example.playlistmaker.search.domain.models.Track
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -13,7 +15,10 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 
-class AudioPlayerViewModel(private val audioPlayerInteractor: AudioPlayerInteractor) : ViewModel() {
+class AudioPlayerViewModel(
+    private val audioPlayerInteractor: AudioPlayerInteractor,
+    private val favoriteTracksInteractor: FavoriteTracksInteractor
+) : ViewModel() {
 
     private val dateFormat by lazy {
         SimpleDateFormat("mm:ss", Locale.getDefault())
@@ -25,10 +30,33 @@ class AudioPlayerViewModel(private val audioPlayerInteractor: AudioPlayerInterac
     private val _playbackState = MutableLiveData<Int>(STATE_DEFAULT)
     val playbackState: LiveData<Int> get() = _playbackState
 
+    private val _isFavorite = MutableLiveData<Boolean>()
+    val isFavorite: LiveData<Boolean> get() = _isFavorite
+
     private var job: Job? = null
 
     init {
         startProgressUpdates()
+    }
+
+
+    fun checkIfTrackIsFavorite(trackId: Int) {
+        viewModelScope.launch {
+            val favoriteStatus = favoriteTracksInteractor.isTrackFavorite(trackId)
+            _isFavorite.postValue(favoriteStatus)
+        }
+    }
+
+    fun onFavoriteClicked(track: Track) {
+        viewModelScope.launch {
+            if (_isFavorite.value == true) {
+                favoriteTracksInteractor.removeTrackFromFavorites(track)
+                _isFavorite.postValue(false)
+            } else {
+                favoriteTracksInteractor.addTrackToFavorites(track)
+                _isFavorite.postValue(true)
+            }
+        }
     }
 
 

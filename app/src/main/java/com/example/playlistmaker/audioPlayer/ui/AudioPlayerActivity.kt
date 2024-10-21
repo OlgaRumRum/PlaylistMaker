@@ -1,7 +1,7 @@
 package com.example.playlistmaker.audioPlayer.ui
 
+import android.app.Activity
 import android.os.Bundle
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
@@ -25,7 +25,7 @@ class AudioPlayerActivity : AppCompatActivity() {
     }
 
 
-    private val viewModel by viewModel<AudioPlayerViewModel>()
+    private val audioPlayerViewModel by viewModel<AudioPlayerViewModel>()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,21 +41,36 @@ class AudioPlayerActivity : AppCompatActivity() {
 
         if (track != null) {
             setupUI(track)
-            track.previewUrl?.let { viewModel.preparePlayer(it) }
+            track.previewUrl?.let { audioPlayerViewModel.preparePlayer(it) }
+            audioPlayerViewModel.checkIfTrackIsFavorite(track.trackId)
         } else {
-            showErrorDialog()
             finish()
         }
+
+
+        binding.buttonFavorite.setOnClickListener {
+
+            track?.let { currentTrack ->
+                audioPlayerViewModel.onFavoriteClicked(currentTrack)
+                setResult(Activity.RESULT_OK)
+            }
+        }
+
 
         binding.buttonPlay.setOnClickListener {
             playbackControl()
         }
 
-        viewModel.trackInfo.observe(this, Observer { trackInfo ->
+        audioPlayerViewModel.trackInfo.observe(this, Observer { trackInfo ->
             binding.progressTime.text = trackInfo?.currentPosition
         })
 
-        viewModel.playbackState.observe(this, Observer { state ->
+        audioPlayerViewModel.isFavorite.observe(this, Observer { isFavorite ->
+            updateLikeButton(isFavorite)
+        })
+
+
+        audioPlayerViewModel.playbackState.observe(this, Observer { state ->
             when (state) {
                 AudioPlayerViewModel.STATE_PLAYING -> binding.buttonPlay.setImageResource(R.drawable.button_pause)
                 AudioPlayerViewModel.STATE_PAUSED, AudioPlayerViewModel.STATE_PREPARED -> binding.buttonPlay.setImageResource(
@@ -70,9 +85,19 @@ class AudioPlayerActivity : AppCompatActivity() {
 
     }
 
+    private fun updateLikeButton(isFavorite: Boolean) {
+        if (isFavorite) {
+            binding.buttonFavorite.setImageResource(R.drawable.button_favorite)
+        } else {
+            binding.buttonFavorite.setImageResource(R.drawable.button_not_favorite)
+        }
+    }
+
+
+
     override fun onStop() {
         super.onStop()
-        viewModel.pausePlayer()
+        audioPlayerViewModel.pausePlayer()
     }
 
     private fun setupUI(track: Track) {
@@ -80,38 +105,30 @@ class AudioPlayerActivity : AppCompatActivity() {
         binding.artist.text = track.artistName
         binding.trackTime.text = dateFormat.format(track.trackTimeMillis)
         binding.albumName.text = track.collectionName.ifEmpty { "" }
-        binding.yearName.text = viewModel.formatReleaseDate(track.releaseDate)
+        binding.yearName.text = audioPlayerViewModel.formatReleaseDate(track.releaseDate)
         binding.genreName.text = track.primaryGenreName
         binding.countryName.text = track.country
 
         Glide.with(this)
 
-            .load(viewModel.formatArtworkUrl(track.artworkUrl100))
+            .load(audioPlayerViewModel.formatArtworkUrl(track.artworkUrl100))
             .placeholder(R.drawable.placeholder)
             .centerCrop()
             .transform(RoundedCorners(applicationContext.resources.getDimensionPixelSize(R.dimen.circleRadius_artwork)))
             .into(binding.artWorkAudioPlayer)
+
     }
-
-
-    private fun showErrorDialog() {
-        val dialog = AlertDialog.Builder(this)
-            .setMessage(R.string.track_not_found_error)
-            .setPositiveButton(R.string.Button_Ok) { dialog, which ->
-                finish()
-            }
-            .create()
-        dialog.show()
-    }
-
     private fun playbackControl() {
-        when (viewModel.playbackState.value) {
-            AudioPlayerViewModel.STATE_PLAYING -> viewModel.pausePlayer()
-            AudioPlayerViewModel.STATE_PREPARED, AudioPlayerViewModel.STATE_PAUSED -> viewModel.startPlayer()
+        when (audioPlayerViewModel.playbackState.value) {
+            AudioPlayerViewModel.STATE_PLAYING -> audioPlayerViewModel.pausePlayer()
+            AudioPlayerViewModel.STATE_PREPARED, AudioPlayerViewModel.STATE_PAUSED -> audioPlayerViewModel.startPlayer()
             AudioPlayerViewModel.STATE_COMPLETED ->
-                viewModel.startPlayer()
+                audioPlayerViewModel.startPlayer()
         }
     }
 
 }
+
+
+
 

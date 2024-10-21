@@ -74,6 +74,7 @@ class SearchViewModel(
 
         searchJob?.cancel()
 
+
         searchJob = viewModelScope.launch {
             delay(SEARCH_DEBOUNCE_DELAY)
             if (latestSearchText == changedText) {
@@ -85,12 +86,22 @@ class SearchViewModel(
     fun changeInputEditTextState(focus: Boolean, input: String) {
         val searchHistory = searchHistoryInteractor.getTrackHistory()
         _isClearInputVisibile.value = input.isNotEmpty()
-        if (focus && input.isEmpty() && searchHistory.isNotEmpty()) {
-            _state.value = SearchState.HistoryList(searchHistory)
-        } else {
-            searchDebounce(input)
+
+        when {
+            focus && input.isEmpty() && searchHistory.isNotEmpty() -> {
+                _state.value = SearchState.HistoryList(searchHistory)
+            }
+
+            focus && input.isEmpty() && searchHistory.isEmpty() -> {
+                _state.value = SearchState.NoHistory
+            }
+
+            else -> {
+                searchDebounce(input)
+            }
         }
     }
+
 
 
     fun addToHistory(track: Track) {
@@ -103,7 +114,10 @@ class SearchViewModel(
 
     fun clearHistory() {
         searchHistoryInteractor.clearTrackHistory()
-        _state.value = SearchState.SearchList(emptyList())
+        _state.value = SearchState.SearchList(
+            //emptyList()
+            mutableListOf()
+        )
     }
 
     fun repeatRequest() {

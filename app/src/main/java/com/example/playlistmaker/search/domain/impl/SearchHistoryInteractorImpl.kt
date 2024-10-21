@@ -8,7 +8,7 @@ class SearchHistoryInteractorImpl(
     private val searchHistoryRepository: SearchHistoryRepository
 ) : SearchHistoryInteractor {
 
-    override fun getTrackHistory(): List<Track> {
+    override fun getTrackHistory(): MutableList<Track> {
         return searchHistoryRepository.getTrackHistory()
     }
 
