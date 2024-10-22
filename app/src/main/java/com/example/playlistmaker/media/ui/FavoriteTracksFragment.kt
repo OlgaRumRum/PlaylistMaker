@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -30,7 +31,7 @@ class FavoriteTracksFragment : Fragment() {
     private val favoriteTracksViewModel: FavoriteTracksViewModel by viewModel()
     private var isClickAllowed = true
 
-    private lateinit var audioPlayerLauncher: ActivityResultLauncher<Intent>
+    private var audioPlayerLauncher: ActivityResultLauncher<Intent>? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -75,7 +76,7 @@ class FavoriteTracksFragment : Fragment() {
         if (clickDebounce()) {
             val intent = Intent(requireContext(), AudioPlayerActivity::class.java)
             intent.putExtra(TRACK_KEY, track)
-            audioPlayerLauncher.launch(intent)
+            audioPlayerLauncher?.launch(intent)
         }
     }
 
@@ -107,26 +108,27 @@ class FavoriteTracksFragment : Fragment() {
     }
 
     private fun showLoading() {
-        binding.favoriteList.visibility = View.GONE
-        binding.mediaPlaceholderIv.visibility = View.GONE
-        binding.mediaPlaceholderTv.visibility = View.GONE
-        binding.progressBar.visibility = View.VISIBLE
+        binding.favoriteList.isVisible = false
+        binding.mediaPlaceholderIv.isVisible = false
+        binding.mediaPlaceholderTv.isVisible = false
+        binding.progressBar.isVisible = true
+
     }
 
     private fun showEmpty(message: String) {
-        binding.favoriteList.visibility = View.GONE
-        binding.mediaPlaceholderIv.visibility = View.VISIBLE
-        binding.mediaPlaceholderTv.visibility = View.VISIBLE
-        binding.progressBar.visibility = View.GONE
+        binding.favoriteList.isVisible = false
+        binding.mediaPlaceholderIv.isVisible = true
+        binding.mediaPlaceholderTv.isVisible = true
+        binding.progressBar.isVisible = false
 
         binding.mediaPlaceholderTv.text = message
     }
 
     private fun showContent(tracks: List<Track>) {
-        binding.favoriteList.visibility = View.VISIBLE
-        binding.mediaPlaceholderIv.visibility = View.GONE
-        binding.mediaPlaceholderTv.visibility = View.GONE
-        binding.progressBar.visibility = View.GONE
+        binding.favoriteList.isVisible = true
+        binding.mediaPlaceholderIv.isVisible = false
+        binding.mediaPlaceholderTv.isVisible = false
+        binding.progressBar.isVisible = false
 
         adapter?.clear()
         adapter?.items?.addAll(tracks)

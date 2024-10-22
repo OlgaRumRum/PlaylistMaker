@@ -115,7 +115,6 @@ class SearchViewModel(
     fun clearHistory() {
         searchHistoryInteractor.clearTrackHistory()
         _state.value = SearchState.SearchList(
-            //emptyList()
             mutableListOf()
         )
     }

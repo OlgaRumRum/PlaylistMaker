@@ -21,7 +21,7 @@ class AudioPlayerViewModel(
 ) : ViewModel() {
 
     private val dateFormat by lazy {
-        SimpleDateFormat("mm:ss", Locale.getDefault())
+        SimpleDateFormat(DATE_FORMAT, Locale.getDefault())
     }
 
     private val _trackInfo = MutableLiveData(TrackInfo())
@@ -136,5 +136,6 @@ class AudioPlayerViewModel(
         const val STATE_COMPLETED = 4
 
         private const val TIMER_UPDATE_INTERVAL = 300L
+        private const val DATE_FORMAT = "mm:ss"
     }
 }
