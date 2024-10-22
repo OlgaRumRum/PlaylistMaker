@@ -14,8 +14,9 @@ class SearchHistoryRepositoryImpl(
     private val gson: Gson
 ) : SearchHistoryRepository {
 
-    override fun getTrackHistory(): List<Track> {
-        val json = sharedPreferences.getString(HISTORY_KEY, null) ?: return listOf()
+    override fun getTrackHistory(): MutableList<Track> {
+        val json = sharedPreferences.getString(HISTORY_KEY, null) ?: return mutableListOf()
+
         val type = object : TypeToken<ArrayList<Track>>() {}.type
         return gson.fromJson(json, type)
     }
