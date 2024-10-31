@@ -6,7 +6,7 @@
     android:id="@+id/media_favorite_tracks"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.playlistmaker.media.ui.FavoriteTracksFragment">
+    tools:context="com.example.playlistmaker.media.ui.favorite.FavoriteTracksFragment">
 
     <ImageView
         android:id="@+id/media_placeholder_iv"

@@ -80,5 +80,35 @@
         <item name="android:textFontWeight">400</item>
     </style>
 
+    <style name="TextInputLayoutFocused" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="android:textColorHint">@color/blue</item>  <!-- Цвет подсказки при фокусе -->
+        <item name="android:textSize">@dimen/textInputLayout_small_text_size
+        </item>  <!-- Размер текста при фокусе -->
+        <item name="hintTextAppearance">@style/HintTextAppearanceFocused
+        </item>  <!-- Стиль подсказки -->
+        <item name="boxStrokeColor">@color/blue</item> <!-- Цвет рамки (опционально) -->
+    </style>
+
+    <style name="TextInputLayoutUnfocused" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="android:textColorHint">@color/text_gray
+        </item> <!-- Цвет подсказки без фокуса -->
+        <item name="android:textSize">@dimen/item_text_size</item> <!-- Размер текста без фокуса -->
+        <item name="hintTextAppearance">@style/HintTextAppearanceUnfocused
+        </item> <!-- Стиль подсказки -->
+        <item name="boxStrokeColor">@color/text_gray</item> <!-- Цвет рамки (опционально) -->
+    </style>
+
+    <style name="HintTextAppearanceFocused" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">@dimen/textInputLayout_small_text_size</item>
+        <item name="android:textColor">@color/blue</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="HintTextAppearanceUnfocused" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">@dimen/item_text_size</item>
+        <item name="android:textColor">@color/text_gray</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
 
 </resources>

@@ -50,5 +50,9 @@
     <string name="playlists">Плейлисты</string>
     <string name="new_playlist">Новый плейлист</string>
 
+    <string name="name">Название *</string>
+    <string name="description">Описание</string>
+    <string name="button_to_create">Создать</string>
+
 
 </resources>

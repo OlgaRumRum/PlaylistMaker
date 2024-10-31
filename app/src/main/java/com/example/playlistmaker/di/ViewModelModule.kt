@@ -1,8 +1,8 @@
 package com.example.playlistmaker.di
 
 import com.example.playlistmaker.audioPlayer.ui.AudioPlayerViewModel
-import com.example.playlistmaker.media.ui.FavoriteTracksViewModel
-import com.example.playlistmaker.media.ui.PlaylistViewModel
+import com.example.playlistmaker.media.ui.favorite.FavoriteTracksViewModel
+import com.example.playlistmaker.media.ui.playlist.PlaylistViewModel
 import com.example.playlistmaker.search.ui.SearchViewModel
 import com.example.playlistmaker.settings.ui.SettingsViewModel
 import org.koin.android.ext.koin.androidContext
