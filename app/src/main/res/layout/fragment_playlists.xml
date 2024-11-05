@@ -24,6 +24,22 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/playlist_rv"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/padding"
+        android:layout_marginStart="@dimen/padding"
+        android:layout_marginEnd="@dimen/padding"
+        android:layout_gravity="center_horizontal"
+        tools:listitem="@layout/playlist_item"
+        tools:itemCount="4"
+        app:layout_constraintTop_toBottomOf="@+id/media_new_playlist"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+
     <ImageView
         android:id="@+id/media_placeholder_iv"
         android:layout_width="wrap_content"
@@ -32,7 +48,6 @@
         android:src="@drawable/search_error"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/media_new_playlist"
         android:contentDescription="@string/media_empty" />
 

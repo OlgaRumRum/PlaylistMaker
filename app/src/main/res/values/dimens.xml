@@ -38,6 +38,8 @@
     <dimen name="pl_margin_top">26dp</dimen>
     <dimen name="textInputLayout_name_top">34dp</dimen>
     <dimen name="textInputLayout_small_text_size">12sp</dimen>
+    <dimen name="playlist_margin_top">4dp</dimen>
+    <dimen name="playlistCover_radius">8dp</dimen>
 
 
 </resources>

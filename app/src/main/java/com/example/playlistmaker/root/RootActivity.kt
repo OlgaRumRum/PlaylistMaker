@@ -1,8 +1,9 @@
 package com.example.playlistmaker.root
 
 import android.os.Bundle
+import android.view.View
+import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.isVisible
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.example.playlistmaker.R
@@ -24,15 +25,29 @@ class RootActivity : AppCompatActivity() {
 
         binding.bottomNavigationView.setupWithNavController(navController)
 
-        navController.addOnDestinationChangedListener { _, destination, _ ->
+        /*navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
                 R.id.newPlaylistFragment -> {
-                    binding.bottomNavigationView.isVisible = false
+                    binding.bottomNavigationView.visibility = View.GONE
                 }
 
                 else -> {
-                    binding.bottomNavigationView.isVisible = true
+                    binding.bottomNavigationView.visibility = View.VISIBLE
                 }
+            }
+        }
+
+         */
+
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            if (destination.id == R.id.newPlaylistFragment) {
+
+                binding.bottomNavigationView.visibility = View.GONE
+                window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+            } else {
+
+                binding.bottomNavigationView.visibility = View.VISIBLE
+                window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
             }
         }
 

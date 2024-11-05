@@ -42,5 +42,4 @@ class FavoriteTracksViewModel(
         stateLiveData.postValue(state)
     }
 
-
 }

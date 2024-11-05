@@ -55,4 +55,6 @@
     <string name="description">Description</string>
     <string name="button_to_create">Create</string>
 
+    <string name="playlist_track_count">%d tracks</string>
+
 </resources>
