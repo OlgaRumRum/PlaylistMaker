@@ -25,30 +25,23 @@ class RootActivity : AppCompatActivity() {
 
         binding.bottomNavigationView.setupWithNavController(navController)
 
-        /*navController.addOnDestinationChangedListener { _, destination, _ ->
+        navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
                 R.id.newPlaylistFragment -> {
+                    binding.bottomNavigationView.visibility = View.GONE
+                    window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+                }
+
+                R.id.audioPlayerFragment2 -> {
                     binding.bottomNavigationView.visibility = View.GONE
                 }
 
                 else -> {
                     binding.bottomNavigationView.visibility = View.VISIBLE
+                    window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
                 }
             }
-        }
 
-         */
-
-        navController.addOnDestinationChangedListener { _, destination, _ ->
-            if (destination.id == R.id.newPlaylistFragment) {
-
-                binding.bottomNavigationView.visibility = View.GONE
-                window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
-            } else {
-
-                binding.bottomNavigationView.visibility = View.VISIBLE
-                window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
-            }
         }
 
     }
