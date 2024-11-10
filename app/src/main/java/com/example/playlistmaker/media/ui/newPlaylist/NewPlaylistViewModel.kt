@@ -10,34 +10,6 @@ import com.example.playlistmaker.media.domain.db.PlaylistInteractor
 import com.example.playlistmaker.media.domain.models.Playlist
 import kotlinx.coroutines.launch
 
-/*class NewPlaylistViewModel(private val playlistInteractor: PlaylistInteractor) : ViewModel() {
-
-    private val _savePlaylistResult = MutableLiveData<Result<Unit>>()
-    val savePlaylistResult: LiveData<Result<Unit>> = _savePlaylistResult
-
-
-    fun savePlaylist(name: String, description: String? = null, coverPath: String? = null) {
-        viewModelScope.launch {
-            try {
-                val playlist = Playlists(
-                    name = name,
-                    description = description,
-                    coverPath = coverPath,
-                    trackIds = emptyList(),
-                    trackCount = 0
-                )
-                Log.d("NewPlaylistViewModel", "Saving playlist: $playlist") // Добавлено логирование
-                playlistInteractor.addNewPlaylist(playlist)
-                _savePlaylistResult.value = Result.success(Unit)
-            } catch (e: Exception) {
-                Log.e("NewPlaylistViewModel", "Error saving playlist", e) // Добавлено логирование
-                _savePlaylistResult.value = Result.failure(e)
-            }
-        }
-    }
-}
-
- */
 class NewPlaylistViewModel(private val playlistInteractor: PlaylistInteractor) : ViewModel() {
 
     private val _savePlaylistResult = MutableLiveData<Result<Unit>>()
@@ -64,7 +36,7 @@ class NewPlaylistViewModel(private val playlistInteractor: PlaylistInteractor) :
                 val playlist = Playlist(
                     name = name,
                     description = description,
-                    coverPath = _coverImageUri?.toString() ?: "", // Uri в строку или пустая строка
+                    coverPath = _coverImageUri?.toString() ?: "",
                     trackIds = emptyList(),
                     trackCount = 0
                 )

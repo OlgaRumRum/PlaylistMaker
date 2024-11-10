@@ -3,7 +3,7 @@ package com.example.playlistmaker.media.ui.favorite
 import com.example.playlistmaker.search.domain.models.Track
 
 sealed interface FavoriteState {
-    object Loading : FavoriteState
+    data object Loading : FavoriteState
 
     data class Content(
         val tracks: List<Track>

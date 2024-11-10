@@ -20,7 +20,7 @@ class FavoriteTracksInteractorImpl(private val favoriteTracksRepository: Favorit
         return favoriteTracksRepository.getFavoriteTracks()
     }
 
-    override suspend fun isTrackFavorite(trackId: Int): Boolean {
+    override suspend fun isTrackFavorite(trackId: Long): Boolean {
         return favoriteTracksRepository.isTrackFavorite(trackId)
     }
 

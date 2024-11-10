@@ -5,6 +5,7 @@ import com.example.playlistmaker.audioPlayer.domain.api.AudioPlayerRepository
 import com.example.playlistmaker.media.data.FavoriteTracksRepositoryImpl
 import com.example.playlistmaker.media.data.PlaylistRepositoryImpl
 import com.example.playlistmaker.media.data.converters.PlaylistDbConverter
+import com.example.playlistmaker.media.data.converters.PlaylistTrackDbConverter
 import com.example.playlistmaker.media.data.converters.TracksDbConvertor
 import com.example.playlistmaker.media.domain.db.FavoriteTracksRepository
 import com.example.playlistmaker.media.domain.db.PlaylistRepository
@@ -40,10 +41,12 @@ val repositoryModule = module {
         FavoriteTracksRepositoryImpl(get(), get())
     }
     single<PlaylistRepository> {
-        PlaylistRepositoryImpl(get(), get())
+        PlaylistRepositoryImpl(get(), get(), get())
     }
 
     factory { PlaylistDbConverter() }
+
+    factory { PlaylistTrackDbConverter() }
 
 
 }

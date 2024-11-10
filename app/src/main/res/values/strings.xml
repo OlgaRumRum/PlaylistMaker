@@ -55,6 +55,12 @@
     <string name="button_to_create">Создать</string>
 
     <string name="playlist_track_count">%d треков</string>
+    <string name="add_to_playlist">Добавить в плейлист</string>
+
+
+    <string name="track_a">%d трека</string>
+    <string name="track">%d трек</string>
+    <string name="tracks">%d треков</string>
 
 
 </resources>

@@ -6,11 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentPlaylistsBinding
 import com.example.playlistmaker.media.domain.models.Playlist
-import com.example.playlistmaker.media.ui.newPlaylist.NewPlaylistFragment
+import com.example.playlistmaker.media.ui.main.MediaFragmentDirections
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PlaylistFragment : Fragment() {
@@ -34,26 +34,15 @@ class PlaylistFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        /*binding.playlistRv.layoutManager = GridLayoutManager(requireContext(),  2)
-        playlistAdapter = PlaylistAdapter()
-        binding.playlistRv.adapter = playlistAdapter
-
-         */
-
-
         playlistViewModel.fillData()
 
         playlistViewModel.observeState().observe(viewLifecycleOwner) {
             render(it)
         }
 
-
         binding.mediaNewPlaylist.setOnClickListener {
-            val transaction = requireActivity().supportFragmentManager.beginTransaction()
-            transaction.replace(R.id.rootFragmentContainerView, NewPlaylistFragment())
-            transaction.addToBackStack(null)
-            transaction.commit()
-
+            val action = MediaFragmentDirections.actionMediaFragmentToNewPlaylistFragment()
+            findNavController().navigate(action)
         }
 
     }

@@ -1,7 +1,7 @@
 package com.example.playlistmaker.media.ui.newPlaylist
 
 sealed interface NewPlaylistState {
-    object Empty : NewPlaylistState
+    data object Empty : NewPlaylistState
 
-    object NotEmpty : NewPlaylistState
+    data object NotEmpty : NewPlaylistState
 }

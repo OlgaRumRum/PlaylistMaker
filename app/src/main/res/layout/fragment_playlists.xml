@@ -49,6 +49,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/media_new_playlist"
+        android:visibility="gone"
         android:contentDescription="@string/media_empty" />
 
     <TextView
@@ -59,6 +60,7 @@
         android:text="@string/no_playlists"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/media_placeholder_iv" />
+        app:layout_constraintTop_toBottomOf="@+id/media_placeholder_iv"
+        android:visibility="gone" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
