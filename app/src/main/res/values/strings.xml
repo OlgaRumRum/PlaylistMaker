@@ -50,5 +50,17 @@
     <string name="playlists">Плейлисты</string>
     <string name="new_playlist">Новый плейлист</string>
 
+    <string name="name">Название *</string>
+    <string name="description">Описание</string>
+    <string name="button_to_create">Создать</string>
+
+    <string name="playlist_track_count">%d треков</string>
+    <string name="add_to_playlist">Добавить в плейлист</string>
+
+
+    <string name="track_a">%d трека</string>
+    <string name="track">%d трек</string>
+    <string name="tracks">%d треков</string>
+
 
 </resources>

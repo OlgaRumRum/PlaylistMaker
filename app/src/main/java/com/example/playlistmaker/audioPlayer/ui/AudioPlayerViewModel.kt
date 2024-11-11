@@ -4,9 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.playlistmaker.audioPlayer.data.AddTrackResult
 import com.example.playlistmaker.audioPlayer.domain.api.AudioPlayerInteractor
 import com.example.playlistmaker.audioPlayer.domain.models.TrackInfo
 import com.example.playlistmaker.media.domain.db.FavoriteTracksInteractor
+import com.example.playlistmaker.media.domain.db.PlaylistInteractor
+import com.example.playlistmaker.media.domain.models.Playlist
 import com.example.playlistmaker.search.domain.models.Track
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -17,7 +20,8 @@ import java.util.Locale
 
 class AudioPlayerViewModel(
     private val audioPlayerInteractor: AudioPlayerInteractor,
-    private val favoriteTracksInteractor: FavoriteTracksInteractor
+    private val favoriteTracksInteractor: FavoriteTracksInteractor,
+    private val playlistInteractor: PlaylistInteractor
 ) : ViewModel() {
 
     private val dateFormat by lazy {
@@ -33,6 +37,25 @@ class AudioPlayerViewModel(
     private val _isFavorite = MutableLiveData<Boolean>()
     val isFavorite: LiveData<Boolean> get() = _isFavorite
 
+    private val _playlists = MutableLiveData<List<Playlist>>()
+    val playlists: LiveData<List<Playlist>> = _playlists
+
+
+    private val _currentPlaylistName = MutableLiveData<String?>()
+    val currentPlaylistName: LiveData<String?> = _currentPlaylistName
+
+    private val _addTrackResult = MutableLiveData<AddTrackResult>()
+    val addTrackResult: LiveData<AddTrackResult> = _addTrackResult
+
+    private val _selectedTrack = MutableLiveData<Track?>(null)
+    val selectedTrack: LiveData<Track?> = _selectedTrack
+
+
+    fun setSelectedTrack(track: Track?) {
+        _selectedTrack.value = track
+    }
+
+
     private var job: Job? = null
 
     init {
@@ -40,7 +63,45 @@ class AudioPlayerViewModel(
     }
 
 
-    fun checkIfTrackIsFavorite(trackId: Int) {
+    fun addTrackToPlaylist(playlist: Playlist, track: Track) {
+        viewModelScope.launch {
+            val isInPlaylist = isTrackInPlaylist(playlist, track)
+            try {
+                if (!isInPlaylist) {
+                    val updatedPlaylist = playlist.copy(
+                        trackIds = playlist.trackIds + listOf(track.trackId),
+                        trackCount = playlist.trackIds.size + 1
+                    )
+                    playlistInteractor.addTrackToPlaylist(updatedPlaylist, track)
+                    _addTrackResult.value = AddTrackResult.Success(playlist.name)
+                } else {
+                    _addTrackResult.value = AddTrackResult.DuplicateTrack(playlist.name)
+                }
+            } catch (e: Exception) {
+                throw e
+            }
+        }
+    }
+
+    private fun isTrackInPlaylist(playlist: Playlist, track: Track): Boolean {
+        return playlist.trackIds.contains(track.trackId)
+    }
+
+
+    fun loadPlaylists() {
+        viewModelScope.launch {
+            try {
+                playlistInteractor.getPlaylistsFlow().collect { playlists ->
+                    _playlists.postValue(playlists)
+                }
+            } catch (e: Exception) {
+                throw e
+            }
+        }
+    }
+
+
+    fun checkIfTrackIsFavorite(trackId: Long) {
         viewModelScope.launch {
             val favoriteStatus = favoriteTracksInteractor.isTrackFavorite(trackId)
             _isFavorite.postValue(favoriteStatus)

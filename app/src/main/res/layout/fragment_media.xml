@@ -6,7 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:background="?attr/colorPrimaryVariant"
-    tools:context="com.example.playlistmaker.media.ui.MediaFragment">
+    tools:context="com.example.playlistmaker.media.ui.main.MediaFragment">
 
     <TextView
         style="@style/TitleManuStyle"

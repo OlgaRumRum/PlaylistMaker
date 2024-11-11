@@ -11,5 +11,5 @@ interface FavoriteTracksRepository {
 
     fun getFavoriteTracks(): Flow<List<Track>>
 
-    suspend fun isTrackFavorite(trackId: Int): Boolean
+    suspend fun isTrackFavorite(trackId: Long): Boolean
 }

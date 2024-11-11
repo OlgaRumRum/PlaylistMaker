@@ -35,6 +35,15 @@
     <dimen name="bottom_navigation_view_text_size">12sp</dimen>
     <dimen name="title_margin_top">10dp</dimen>
     <dimen name="title_padding">12dp</dimen>
+    <dimen name="pl_margin_top">26dp</dimen>
+    <dimen name="textInputLayout_name_top">34dp</dimen>
+    <dimen name="textInputLayout_small_text_size">12sp</dimen>
+    <dimen name="playlist_margin_top">4dp</dimen>
+    <dimen name="playlistCover_radius">8dp</dimen>
+    <dimen name="view_width">50dp</dimen>
+    <dimen name="view_height">4dp</dimen>
+    <dimen name="add_to_playlist_height">52dp</dimen>
+    <dimen name="playlist_text_size">16sp</dimen>
 
 
 </resources>

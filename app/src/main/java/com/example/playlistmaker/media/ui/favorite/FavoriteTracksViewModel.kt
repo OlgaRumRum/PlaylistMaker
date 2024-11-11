@@ -1,4 +1,4 @@
-package com.example.playlistmaker.media.ui
+package com.example.playlistmaker.media.ui.favorite
 
 import android.content.Context
 import androidx.lifecycle.LiveData
@@ -41,6 +41,5 @@ class FavoriteTracksViewModel(
     private fun renderState(state: FavoriteState) {
         stateLiveData.postValue(state)
     }
-
 
 }

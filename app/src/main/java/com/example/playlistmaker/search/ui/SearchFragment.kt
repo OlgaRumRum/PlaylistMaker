@@ -2,7 +2,6 @@ package com.example.playlistmaker.search.ui
 
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -14,9 +13,9 @@ import android.view.inputmethod.InputMethodManager
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
-import com.example.playlistmaker.audioPlayer.ui.AudioPlayerActivity
 import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.search.domain.models.Track
 import kotlinx.coroutines.delay
@@ -129,16 +128,21 @@ class SearchFragment : Fragment() {
 
         searchAdapter.onItemClickListener = TrackViewHolder.OnItemClickListener { track ->
             viewModel.addToHistory(track)
-            intentAudioPlayerActivity(track)
+            intentAudioPlayerFragment(track)
         }
 
 
         historyAdapter.onItemClickListener = TrackViewHolder.OnItemClickListener { track ->
             viewModel.addToHistory(track)
-            intentAudioPlayerActivity(track)
+            intentAudioPlayerFragment(track)
         }
 
 
+    }
+
+    override fun onStart() {
+        super.onStart()
+        isClickAllowed = true
     }
 
     override fun onDestroyView() {
@@ -222,11 +226,11 @@ class SearchFragment : Fragment() {
         }
     }
 
-    private fun intentAudioPlayerActivity(track: Track) {
+    private fun intentAudioPlayerFragment(track: Track) {
         if (clickDebounce()) {
-            val intent = Intent(requireContext(), AudioPlayerActivity::class.java)
-            intent.putExtra(TRACK_KEY, track)
-            startActivity(intent)
+            val bundle = Bundle()
+            bundle.putParcelable(TRACK_KEY, track)
+            findNavController().navigate(R.id.action_searchFragment_to_audioPlayerFragment2, bundle)
         }
     }
 

@@ -51,4 +51,16 @@
     <string name="playlists">Playlists</string>
     <string name="new_playlist">New playlist</string>
 
+    <string name="name">Name *</string>
+    <string name="description">Description</string>
+    <string name="button_to_create">Create</string>
+
+    <string name="playlist_track_count">%d tracks</string>
+    <string name="add_to_playlist">Add to playlist</string>
+
+    <string name="track_a">%d track</string>
+    <string name="track">%d track</string>
+    <string name="tracks">%d tracks</string>
+
+
 </resources>

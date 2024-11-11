@@ -1,4 +1,4 @@
-package com.example.playlistmaker.media.ui
+package com.example.playlistmaker.media.ui.favorite
 
 import android.app.Activity
 import android.content.Intent
@@ -11,8 +11,9 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.playlistmaker.audioPlayer.ui.AudioPlayerActivity
+import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentFavoriteTracksBinding
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.ui.TrackAdapter
@@ -44,12 +45,12 @@ class FavoriteTracksFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        isClickAllowed = true
         adapter = TrackAdapter()
 
 
         adapter!!.onItemClickListener = TrackViewHolder.OnItemClickListener { track ->
-            intentAudioPlayerActivity(track)
+            intentAudioPlayerFragment(track)
         }
 
         binding.favoriteList.layoutManager =
@@ -72,11 +73,15 @@ class FavoriteTracksFragment : Fragment() {
     }
 
 
-    private fun intentAudioPlayerActivity(track: Track) {
+    private fun intentAudioPlayerFragment(track: Track) {
         if (clickDebounce()) {
-            val intent = Intent(requireContext(), AudioPlayerActivity::class.java)
-            intent.putExtra(TRACK_KEY, track)
-            audioPlayerLauncher?.launch(intent)
+            val bundle = Bundle()
+            bundle.putParcelable(TRACK_KEY, track)
+
+            findNavController().navigate(
+                R.id.action_mediaFragment_to_audioPlayerFragment2,
+                bundle
+            )
         }
     }
 

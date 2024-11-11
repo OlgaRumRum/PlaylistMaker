@@ -32,7 +32,7 @@ class FavoriteTracksRepositoryImpl(
         return tracks.map { track -> tracksDbConvertor.map(track) }
     }
 
-    override suspend fun isTrackFavorite(trackId: Int): Boolean {
+    override suspend fun isTrackFavorite(trackId: Long): Boolean {
         return appDatabase.favoriteTracksDao().isFavorite(trackId) > 0
     }
 

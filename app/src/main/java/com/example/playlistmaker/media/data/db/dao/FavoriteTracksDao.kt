@@ -20,9 +20,9 @@ interface FavoriteTracksDao {
     suspend fun getFavoriteList(): List<TracksEntity>
 
     @Query("SELECT trackId FROM favorites_tracks_table")
-    suspend fun getFavoriteIdList(): List<Int>
+    suspend fun getFavoriteIdList(): List<Long>
 
     @Query("SELECT COUNT(*) FROM favorites_tracks_table WHERE trackId = :trackId")
-    suspend fun isFavorite(trackId: Int): Int
+    suspend fun isFavorite(trackId: Long): Long
 
 }
