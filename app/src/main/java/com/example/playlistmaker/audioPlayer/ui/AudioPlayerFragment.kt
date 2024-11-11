@@ -64,10 +64,15 @@ class AudioPlayerFragment : Fragment() {
             findNavController().popBackStack()
         }
 
+        val bottomSheetBehavior = BottomSheetBehavior.from(binding.standardBottomSheet).apply {
+            state = BottomSheetBehavior.STATE_HIDDEN
+        }
+
         audioPlayerViewModel.setSelectedTrack(track)
         playlistAdapter = BottomSheetAdapter { playlist ->
             audioPlayerViewModel.selectedTrack.value?.let { track ->
                 audioPlayerViewModel.addTrackToPlaylist(playlist, track)
+
             } ?: run {
                 Toast.makeText(requireContext(), "Ошибка: Трек не найден!", Toast.LENGTH_SHORT)
                     .show()
@@ -79,6 +84,7 @@ class AudioPlayerFragment : Fragment() {
         audioPlayerViewModel.addTrackResult.observe(viewLifecycleOwner) { result ->
             when (result) {
                 is AddTrackResult.Success -> {
+                    bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
                     Toast.makeText(
                         context,
                         "Трек успешно добавлен в плейлист ${result.playlistName}",
@@ -133,9 +139,7 @@ class AudioPlayerFragment : Fragment() {
             }
         })
 
-        val bottomSheetBehavior = BottomSheetBehavior.from(binding.standardBottomSheet).apply {
-            state = BottomSheetBehavior.STATE_HIDDEN
-        }
+
 
         binding.buttonAdd.setOnClickListener {
             audioPlayerViewModel.loadPlaylists()
