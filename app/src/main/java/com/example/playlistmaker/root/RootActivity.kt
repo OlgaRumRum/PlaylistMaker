@@ -29,13 +29,25 @@ class RootActivity : AppCompatActivity() {
             when (destination.id) {
                 R.id.newPlaylistFragment -> {
                     binding.bottomNavigationView.visibility = View.GONE
+                    binding.bottomNavDivider.visibility = View.GONE
                     window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
                 }
 
                 R.id.audioPlayerFragment2 -> {
                     binding.bottomNavigationView.visibility = View.GONE
+                    binding.bottomNavDivider.visibility = View.GONE
                 }
 
+                R.id.onePlaylistFragment -> {
+                    binding.bottomNavigationView.visibility = View.GONE
+                    binding.bottomNavDivider.visibility = View.GONE
+                }
+
+                R.id.editPlaylistFragment -> {
+                    binding.bottomNavigationView.visibility = View.GONE
+                    binding.bottomNavDivider.visibility = View.GONE
+                    window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+                }
                 else -> {
                     binding.bottomNavigationView.visibility = View.VISIBLE
                     window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
