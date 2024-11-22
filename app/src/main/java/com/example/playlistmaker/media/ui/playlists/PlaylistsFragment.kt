@@ -1,4 +1,4 @@
-package com.example.playlistmaker.media.ui.playlist
+package com.example.playlistmaker.media.ui.playlists
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,21 +6,28 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentPlaylistsBinding
 import com.example.playlistmaker.media.domain.models.Playlist
 import com.example.playlistmaker.media.ui.main.MediaFragmentDirections
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class PlaylistFragment : Fragment() {
+class PlaylistsFragment : Fragment() {
 
     private var _binding: FragmentPlaylistsBinding? = null
     private val binding get() = _binding!!
 
-    private val playlistViewModel: PlaylistViewModel by viewModel()
+    private val playlistViewModel: PlaylistsViewModel by viewModel()
 
-    private var playlistAdapter: PlaylistAdapter? = null
+    private var playlistAdapter: PlaylistsAdapter? = null
+
+    private var isClickAllowed = true
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,6 +40,7 @@ class PlaylistFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        isClickAllowed = true
 
         playlistViewModel.fillData()
 
@@ -45,6 +53,15 @@ class PlaylistFragment : Fragment() {
             findNavController().navigate(action)
         }
 
+        binding.playlistRv.layoutManager = GridLayoutManager(requireContext(), 2)
+
+        playlistAdapter = PlaylistsAdapter().apply {
+            onItemClickListener = PlaylistsViewHolder.OnItemClickListener { playlist ->
+                intentOnePlaylistFragment(playlist)
+            }
+        }
+        binding.playlistRv.adapter = playlistAdapter
+
     }
 
 
@@ -53,10 +70,10 @@ class PlaylistFragment : Fragment() {
         _binding = null
     }
 
-    private fun render(state: PlaylistState) {
+    private fun render(state: PlaylistsState) {
         when (state) {
-            is PlaylistState.Content -> showContent(state.playlists)
-            is PlaylistState.Empty -> showEmpty(state.message)
+            is PlaylistsState.Content -> showContent(state.playlists)
+            is PlaylistsState.Empty -> showEmpty(state.message)
         }
     }
 
@@ -74,19 +91,38 @@ class PlaylistFragment : Fragment() {
         binding.mediaPlaceholderIv.isVisible = false
         binding.mediaPlaceholderTv.isVisible = false
 
-
-        binding.playlistRv.layoutManager = GridLayoutManager(requireContext(), 2)
-        playlistAdapter = PlaylistAdapter()
-        binding.playlistRv.adapter = playlistAdapter
-
         playlistAdapter?.clear()
         playlistAdapter?.playlists?.addAll(playlists)
         playlistAdapter?.notifyDataSetChanged()
     }
 
+    private fun intentOnePlaylistFragment(playlist: Playlist) {
+        if (clickDebounce()) {
+            val bundle = Bundle().apply {
+                putLong(PLAYLIST_KEY, playlist.id)
+            }
+            findNavController().navigate(R.id.action_mediaFragment_to_onePlaylistFragment, bundle)
+        }
+    }
+
+
+    private fun clickDebounce(): Boolean {
+        val current = isClickAllowed
+        if (isClickAllowed) {
+            isClickAllowed = false
+            viewLifecycleOwner.lifecycleScope.launch {
+                delay(CLICK_DEBOUNCE_DELAY)
+                isClickAllowed = true
+            }
+        }
+        return current
+    }
+
 
     companion object {
-        fun newInstance() = PlaylistFragment()
+        fun newInstance() = PlaylistsFragment()
+        const val PLAYLIST_KEY = "playlist_key"
+        private const val CLICK_DEBOUNCE_DELAY = 1000L
 
     }
 }

@@ -39,7 +39,6 @@ class NewPlaylistFragment : Fragment() {
 
     private lateinit var pickImageLauncher: ActivityResultLauncher<PickVisualMediaRequest>
 
-
     private lateinit var confirmDialog: AlertDialog
 
     private var coverUri: Uri? = null

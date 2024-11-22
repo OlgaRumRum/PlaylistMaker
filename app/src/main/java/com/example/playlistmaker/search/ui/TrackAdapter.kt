@@ -9,6 +9,7 @@ import com.example.playlistmaker.search.domain.models.Track
 
 class TrackAdapter : RecyclerView.Adapter<TrackViewHolder>() {
     var onItemClickListener: TrackViewHolder.OnItemClickListener? = null
+    var onItemLongClickListener: TrackViewHolder.OnItemLongClickListener? = null
     var items: MutableList<Track> = mutableListOf()
 
     fun clear() {
@@ -22,7 +23,11 @@ class TrackAdapter : RecyclerView.Adapter<TrackViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
-        holder.bind(item = items[position], onItemClickListener = onItemClickListener)
+        holder.bind(
+            item = items[position],
+            onItemClickListener = onItemClickListener,
+            onItemLongClickListener = onItemLongClickListener
+        )
 
     }
 

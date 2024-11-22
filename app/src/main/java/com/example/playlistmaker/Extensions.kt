@@ -13,3 +13,16 @@ fun Context.getFormattedCount(trackCount: Int): String {
         else -> String.format(getString(R.string.track_a), trackCount)
     }
 }
+
+
+fun Context.durationTextFormater(duration: Int): String {
+    val lastDigit = duration % 10
+    val lastTwoDigits = duration % 100
+
+    return when {
+        lastTwoDigits in 11..14 -> String.format(getString(R.string.minutes), duration)
+        lastDigit == 1 -> String.format(getString(R.string.minute), duration)
+        lastDigit in 2..4 -> String.format(getString(R.string.minutes_s), duration)
+        else -> String.format(getString(R.string.minutes), duration)
+    }
+}

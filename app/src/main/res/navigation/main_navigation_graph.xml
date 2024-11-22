@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_mediaFragment_to_audioPlayerFragment2"
             app:destination="@id/audioPlayerFragment2" />
+        <action
+            android:id="@+id/action_mediaFragment_to_onePlaylistFragment"
+            app:destination="@id/onePlaylistFragment" />
     </fragment>
     <fragment
         android:id="@+id/searchFragment"
@@ -43,5 +46,28 @@
         <action
             android:id="@+id/action_audioPlayerFragment2_to_newPlaylistFragment"
             app:destination="@id/newPlaylistFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/onePlaylistFragment"
+        android:name="com.example.playlistmaker.media.ui.playlist.OnePlaylistFragment"
+        android:label="fragment_one_playlist"
+        tools:layout="@layout/fragment_one_playlist">
+        <action
+            android:id="@+id/action_onePlaylistFragment_to_audioPlayerFragment2"
+            app:destination="@id/audioPlayerFragment2" />
+        <action
+            android:id="@+id/action_onePlaylistFragment_to_mediaFragment"
+            app:destination="@id/mediaFragment" />
+        <action
+            android:id="@+id/action_onePlaylistFragment_to_editPlaylistFragment"
+            app:destination="@id/editPlaylistFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/editPlaylistFragment"
+        android:name="com.example.playlistmaker.media.ui.editPlaylist.EditPlaylistFragment"
+        android:label="EditPlaylistFragment">
+        <argument
+            android:name="playlist"
+            app:argType="com.example.playlistmaker.media.domain.models.Playlist" />
     </fragment>
 </navigation>

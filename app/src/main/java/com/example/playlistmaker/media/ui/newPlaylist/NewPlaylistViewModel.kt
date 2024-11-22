@@ -1,7 +1,6 @@
 package com.example.playlistmaker.media.ui.newPlaylist
 
 import android.net.Uri
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -40,11 +39,9 @@ class NewPlaylistViewModel(private val playlistInteractor: PlaylistInteractor) :
                     trackIds = emptyList(),
                     trackCount = 0
                 )
-                Log.d("NewPlaylistViewModel", "Saving playlist: $playlist")
                 playlistInteractor.addNewPlaylist(playlist)
                 _savePlaylistResult.value = Result.success(Unit)
             } catch (e: Exception) {
-                Log.e("NewPlaylistViewModel", "Error saving playlist", e)
                 _savePlaylistResult.value = Result.failure(e)
             }
         }
