@@ -7,7 +7,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
+import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -24,6 +26,7 @@ import com.example.playlistmaker.search.ui.TrackAdapter
 import com.example.playlistmaker.search.ui.TrackViewHolder
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -38,9 +41,22 @@ class OnePlaylistFragment : Fragment() {
 
     private var playlist: Playlist? = null
 
-    private var trackAdapter: TrackAdapter = TrackAdapter()
+    private val trackAdapter: TrackAdapter = TrackAdapter()
 
     private var isClickAllowed = true
+
+    private var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>? = null
+
+
+    private val listener = ViewTreeObserver.OnPreDrawListener {
+        val peekHeight = binding.main.height - binding.onePlaylistFragment.height
+        bottomSheetBehavior?.peekHeight = peekHeight
+        GlobalScope.launch {
+            delay(1000)
+            removeOnPreDrawListener()
+        }
+        true
+    }
 
 
     override fun onCreateView(
@@ -55,16 +71,18 @@ class OnePlaylistFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         isClickAllowed = true
 
+        binding.main.viewTreeObserver.addOnPreDrawListener(listener)
+
         binding.shareOnePlaylist.setOnClickListener {
             sharePlaylist()
         }
-
 
         val bottomSheetBehaviorMenu = BottomSheetBehavior.from(binding.menuBottomSheet)
         bottomSheetBehaviorMenu.state = BottomSheetBehavior.STATE_HIDDEN
 
         binding.menuOnePlaylist.setOnClickListener {
 
+            _binding ?: return@setOnClickListener
             bottomSheetBehaviorMenu.state = BottomSheetBehavior.STATE_HALF_EXPANDED
 
             bottomSheetBehaviorMenu.addBottomSheetCallback(object :
@@ -72,11 +90,11 @@ class OnePlaylistFragment : Fragment() {
                 override fun onStateChanged(bottomSheet: View, newState: Int) {
                     when (newState) {
                         BottomSheetBehavior.STATE_HIDDEN -> {
-                            binding.overlay.visibility = View.GONE
+                            binding.overlay.isVisible = false
                         }
 
                         else -> {
-                            binding.overlay.visibility = View.VISIBLE
+                            binding.overlay.isVisible = true
                         }
                     }
                 }
@@ -85,7 +103,6 @@ class OnePlaylistFragment : Fragment() {
                     binding.overlay.alpha = (slideOffset + 1f) / 2f
                 }
             })
-
         }
 
 
@@ -123,11 +140,11 @@ class OnePlaylistFragment : Fragment() {
             binding.countTrackTv.text = context?.getFormattedCount(count)
         }
 
-        val bottomSheetBehavior = BottomSheetBehavior.from(binding.standardBottomSheet).apply {
+        bottomSheetBehavior = BottomSheetBehavior.from(binding.standardBottomSheet).apply {
             state = BottomSheetBehavior.STATE_HIDDEN
         }
 
-        bottomSheetBehavior.addBottomSheetCallback(object :
+        bottomSheetBehavior?.addBottomSheetCallback(object :
             BottomSheetBehavior.BottomSheetCallback() {
 
             override fun onStateChanged(bottomSheet: View, newState: Int) {
@@ -147,19 +164,8 @@ class OnePlaylistFragment : Fragment() {
                 binding.overlay.alpha = 0f
             }
 
-
         })
 
-        binding.shareOnePlaylist.viewTreeObserver.addOnGlobalLayoutListener(
-            object : ViewTreeObserver.OnGlobalLayoutListener {
-                override fun onGlobalLayout() {
-                    val peekHeight = binding.main.height - binding.onePlaylistFragment.height
-
-                    bottomSheetBehavior.peekHeight = peekHeight
-                    binding.shareOnePlaylist.viewTreeObserver.removeOnGlobalLayoutListener(this)
-                }
-            }
-        )
 
         binding.bottomSheetRecyclerViewTrack.layoutManager = LinearLayoutManager(requireContext())
 
@@ -190,9 +196,8 @@ class OnePlaylistFragment : Fragment() {
     }
 
     private fun navigateToEditPlaylist(playlist: Playlist) {
-
         val direction =
-            OnePlaylistFragmentDirections.actionOnePlaylistFragmentToEditPlaylistFragment(playlist)
+            OnePlaylistFragmentDirections.actionOnePlaylistFragmentToNewPlaylistFragment(playlist)
         findNavController().navigate(direction)
     }
 
@@ -303,6 +308,11 @@ class OnePlaylistFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+
+    }
+
+    private fun removeOnPreDrawListener() {
+        binding.main.viewTreeObserver.removeOnPreDrawListener(listener)
     }
 
     companion object {

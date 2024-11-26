@@ -49,7 +49,7 @@ class PlaylistsFragment : Fragment() {
         }
 
         binding.mediaNewPlaylist.setOnClickListener {
-            val action = MediaFragmentDirections.actionMediaFragmentToNewPlaylistFragment()
+            val action = MediaFragmentDirections.actionMediaFragmentToNewPlaylistFragment(null)
             findNavController().navigate(action)
         }
 

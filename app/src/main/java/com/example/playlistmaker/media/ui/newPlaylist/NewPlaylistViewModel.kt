@@ -21,24 +21,20 @@ class NewPlaylistViewModel(private val playlistInteractor: PlaylistInteractor) :
     val playlistDescription: LiveData<String?> = _playlistDescription
 
     private var _coverImageUri: Uri? = null
+
     fun setCoverImageUri(uri: Uri?) {
         _coverImageUri = uri
     }
 
+    fun saveEditPlaylist(playlist: Playlist) {
+        viewModelScope.launch {
+            playlistInteractor.updatePlaylist(playlist)
+        }
+    }
 
-    fun savePlaylist() {
-        val name = _playlistName.value ?: ""
-        val description = _playlistDescription.value
-
+    fun savePlaylist(playlist: Playlist) {
         viewModelScope.launch {
             try {
-                val playlist = Playlist(
-                    name = name,
-                    description = description,
-                    coverPath = _coverImageUri?.toString() ?: "",
-                    trackIds = emptyList(),
-                    trackCount = 0
-                )
                 playlistInteractor.addNewPlaylist(playlist)
                 _savePlaylistResult.value = Result.success(Unit)
             } catch (e: Exception) {

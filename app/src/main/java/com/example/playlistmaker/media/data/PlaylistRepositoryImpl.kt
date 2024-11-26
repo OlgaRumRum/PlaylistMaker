@@ -78,16 +78,14 @@ class PlaylistRepositoryImpl(
         return convertFromPlaylistTrackEntity(filteredTracks)
     }
 
-
     override suspend fun getPlaylistById(playlistId: Long): Playlist? {
         val playlistEntity = appDatabase.playlistDao().getPlaylistById(playlistId)
         return playlistEntity?.let { playlistDbConverter.map(it) }
     }
 
-
     override suspend fun removeTrackFromPlaylist(trackId: Long, playlistId: Long) {
-        val playlist = getPlaylistById(playlistId)
-        val tracks = playlist!!.trackIds.toMutableList()
+        val playlist = getPlaylistById(playlistId) ?: return
+        val tracks = playlist.trackIds.toMutableList()
         tracks.remove(trackId)
         val updatedPlaylist = playlist.copy(trackIds = tracks.toList(), trackCount = tracks.size)
         Log.d("MY_TAG", tracks.size.toString())
@@ -101,11 +99,9 @@ class PlaylistRepositoryImpl(
                 break
             }
         }
-
         if (!isTrackInOtherPlaylist) {
             appDatabase.playlistDao().deleteTrackById(trackId)
         }
-
     }
 
     private suspend fun isTrackInOtherPlaylists(trackId: Long) {

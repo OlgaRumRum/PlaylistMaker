@@ -1,6 +1,5 @@
 package com.example.playlistmaker.media.ui.newPlaylist
 
-
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
@@ -20,10 +19,12 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentNewPlaylistBinding
+import com.example.playlistmaker.media.domain.models.Playlist
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
@@ -43,6 +44,7 @@ class NewPlaylistFragment : Fragment() {
 
     private var coverUri: Uri? = null
 
+    private val args by navArgs<NewPlaylistFragmentArgs>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -56,16 +58,39 @@ class NewPlaylistFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.buttonCreate.isEnabled = false
+        val editablePlaylist = args.playlist
+        if (editablePlaylist == null) {
+            binding.toolbarNewPlaylist.title = getString(R.string.new_playlist)
+            binding.buttonCreate.text = getString(R.string.button_to_create)
+            binding.buttonCreate.isEnabled = false
+        } else {
+            binding.toolbarNewPlaylist.title = getString(R.string.edit_playlist)
+            binding.buttonCreate.text = getString(R.string.save)
+            binding.textInputEditTextName.setText(editablePlaylist.name)
+            binding.textInputEditTextDescription.setText(editablePlaylist.description)
+            binding.buttonCreate.isEnabled = true
+
+            editablePlaylist.coverPath?.let { uri ->
+                setImageIntoView(uri.toUri())
+                coverUri = uri.toUri()
+            }
+        }
+
 
         binding.toolbarNewPlaylist.setNavigationOnClickListener {
-            if (
-                coverUri != null
-                || binding.textInputEditTextName.text.toString().isNotBlank()
-                || binding.textInputEditTextDescription.text.toString().isNotBlank()
-            ) {
-                confirmDialog.show()
+            if (editablePlaylist == null) {
+                if (coverUri != null &&
+                    binding.textInputEditTextName.text.toString().isNotBlank() &&
+                    binding.textInputEditTextDescription.text.toString().isNotBlank()
+                ) {
+                    confirmDialog.show()
+                } else {
+
+                    findNavController().navigateUp()
+                }
             } else {
+
+
                 findNavController().navigateUp()
             }
         }
@@ -75,24 +100,33 @@ class NewPlaylistFragment : Fragment() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable?) {
-                binding.buttonCreate.isEnabled = s?.isNotEmpty() ?: false
+                binding.buttonCreate.isEnabled = s?.isNotBlank() ?: false
             }
         })
-
 
 
         binding.buttonCreate.setOnClickListener {
             val name = binding.textInputEditTextName.text.toString()
             val description = binding.textInputEditTextDescription.text.toString()
+
             newPlaylistViewModel.setPlaylistName(name)
             newPlaylistViewModel.setPlaylistDescription(description)
-            val uri = coverUri
-            if (uri != null) {
+
+            coverUri?.let { uri ->
                 val privateStorageUri = saveImageToPrivateStorage(uri)
                 newPlaylistViewModel.setCoverImageUri(privateStorageUri)
             }
-            newPlaylistViewModel.savePlaylist()
+
+            if (editablePlaylist == null) {
+                saveNewPlaylist(name, description)
+            } else {
+                editExistingPlaylist(editablePlaylist, name, description)
+            }
+
+            findNavController().navigateUp()
         }
+
+
 
         newPlaylistViewModel.savePlaylistResult.observe(viewLifecycleOwner) { result ->
             result.fold(
@@ -108,6 +142,13 @@ class NewPlaylistFragment : Fragment() {
             )
         }
 
+        newPlaylistViewModel.playlistName.observe(viewLifecycleOwner) { name ->
+            binding.textInputEditTextName.setText(name)
+        }
+
+        newPlaylistViewModel.playlistDescription.observe(viewLifecycleOwner) { description ->
+            binding.textInputEditTextDescription.setText(description)
+        }
 
 
         pickImageLauncher =
@@ -156,6 +197,26 @@ class NewPlaylistFragment : Fragment() {
 
     }
 
+    private fun saveNewPlaylist(name: String, description: String) {
+        val newPlaylist = Playlist(
+            0,
+            name,
+            description,
+            coverUri?.toString(),
+            emptyList(),
+            0
+        )
+
+        newPlaylistViewModel.savePlaylist(newPlaylist)
+    }
+
+    private fun editExistingPlaylist(playlist: Playlist, name: String, description: String) {
+        val updatedPlaylist =
+            playlist.copy(name = name, description = description, coverPath = coverUri?.toString())
+
+        newPlaylistViewModel.saveEditPlaylist(updatedPlaylist)
+    }
+
     private fun setImageIntoView(uri: Uri) {
         Glide.with(requireContext())
             .load(uri)
@@ -189,5 +250,7 @@ class NewPlaylistFragment : Fragment() {
     }
 
 }
+
+
 
 
