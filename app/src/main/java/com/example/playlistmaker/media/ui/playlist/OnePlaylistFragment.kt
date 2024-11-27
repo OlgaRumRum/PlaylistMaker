@@ -26,7 +26,6 @@ import com.example.playlistmaker.search.ui.TrackAdapter
 import com.example.playlistmaker.search.ui.TrackViewHolder
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -49,15 +48,15 @@ class OnePlaylistFragment : Fragment() {
 
 
     private val listener = ViewTreeObserver.OnPreDrawListener {
+        _binding ?: return@OnPreDrawListener true
         val peekHeight = binding.main.height - binding.onePlaylistFragment.height
         bottomSheetBehavior?.peekHeight = peekHeight
-        GlobalScope.launch {
+        lifecycleScope.launch {
             delay(1000)
             removeOnPreDrawListener()
         }
         true
     }
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -193,6 +192,7 @@ class OnePlaylistFragment : Fragment() {
                 navigateToEditPlaylist(it)
             }
         }
+
     }
 
     private fun navigateToEditPlaylist(playlist: Playlist) {
@@ -312,6 +312,7 @@ class OnePlaylistFragment : Fragment() {
     }
 
     private fun removeOnPreDrawListener() {
+        _binding ?: return
         binding.main.viewTreeObserver.removeOnPreDrawListener(listener)
     }
 
