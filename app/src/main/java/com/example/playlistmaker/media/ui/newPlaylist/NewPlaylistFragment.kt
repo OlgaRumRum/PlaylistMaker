@@ -112,9 +112,11 @@ class NewPlaylistFragment : Fragment() {
             newPlaylistViewModel.setPlaylistDescription(description)
 
             coverUri?.let { uri ->
-                val privateStorageUri = saveImageToPrivateStorage(uri)
-                coverUri = privateStorageUri
-                newPlaylistViewModel.setCoverImageUri(privateStorageUri)
+                if (uri.toString() != args.playlist?.coverPath.toString()) {
+                    val privateStorageUri = saveImageToPrivateStorage(uri)
+                    coverUri = privateStorageUri
+                    newPlaylistViewModel.setCoverImageUri(privateStorageUri)
+                }
             }
 
             if (editablePlaylist == null) {
