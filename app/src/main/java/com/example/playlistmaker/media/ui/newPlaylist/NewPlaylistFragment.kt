@@ -95,7 +95,6 @@ class NewPlaylistFragment : Fragment() {
             }
         }
 
-
         binding.textInputEditTextName.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
@@ -114,6 +113,7 @@ class NewPlaylistFragment : Fragment() {
 
             coverUri?.let { uri ->
                 val privateStorageUri = saveImageToPrivateStorage(uri)
+                coverUri = privateStorageUri
                 newPlaylistViewModel.setCoverImageUri(privateStorageUri)
             }
 
@@ -150,7 +150,6 @@ class NewPlaylistFragment : Fragment() {
             binding.textInputEditTextDescription.setText(description)
         }
 
-
         pickImageLauncher =
             registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
                 if (uri != null) {
@@ -165,8 +164,6 @@ class NewPlaylistFragment : Fragment() {
         binding.placeholderNewPlaylist.setOnClickListener {
             pickImageLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
-
-
 
         requireActivity().onBackPressedDispatcher.addCallback(
             viewLifecycleOwner,
