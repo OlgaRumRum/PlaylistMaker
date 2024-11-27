@@ -211,14 +211,26 @@ class OnePlaylistFragment : Fragment() {
                     Toast.LENGTH_SHORT
                 ).show()
             } else {
-                val tracksList = onePlaylistViewModel.tracks.value!!.joinToString("\n") { track ->
+
+                var tracksList = ""
+
+                val tracks = onePlaylistViewModel!!.tracks!!.value!!
+                for (i in 0 until tracks.size) {
+                    val track = tracks[i]
                     val duration = FormatDuration.formatDuration(track.trackTimeMillis)
-                    "${track.artistName} - ${track.trackName} ($duration)"
+                    tracksList += "${i + 1}. ${track.artistName} - " +
+                            "${track.trackName} ($duration)"
+                    if (i < tracks.size - 1) {
+                        tracksList += "\n"
+                    }
                 }
+
+                val formattedTrackCount = requireContext().getFormattedCount(playlist.trackCount)
+
                 val message = """
                 ${playlist.name}
                 ${playlist.description}
-                [${playlist.trackCount}] треков
+                $formattedTrackCount 
                 $tracksList
             """.trimIndent()
 
