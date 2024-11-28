@@ -22,7 +22,10 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.MultiTransformation
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentNewPlaylistBinding
 import com.example.playlistmaker.media.domain.models.Playlist
@@ -220,11 +223,18 @@ class NewPlaylistFragment : Fragment() {
 
     private fun setImageIntoView(uri: Uri) {
         binding.placeholderNewPlaylist.scaleType = ImageView.ScaleType.CENTER_CROP
-        Glide.with(requireContext())
+        Glide.with(this)
             .load(uri)
-            .placeholder(R.drawable.placeholder)
-            .centerCrop()
-            .transform(RoundedCorners(requireContext().resources.getDimensionPixelSize(R.dimen.playlistCover_radius)))
+            .apply(
+                RequestOptions().transform(
+                    MultiTransformation(
+                        CenterCrop(),
+                        RoundedCorners(
+                            (requireContext().resources.getDimensionPixelSize(R.dimen.playlistCover_radius))
+                        )
+                    )
+                )
+            )
             .into(binding.placeholderNewPlaylist)
     }
 
