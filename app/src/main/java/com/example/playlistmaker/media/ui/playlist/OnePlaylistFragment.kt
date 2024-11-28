@@ -228,11 +228,11 @@ class OnePlaylistFragment : Fragment() {
                 val formattedTrackCount = requireContext().getFormattedCount(playlist.trackCount)
 
                 val message = """
-                ${playlist.name}
-                ${playlist.description}
-                $formattedTrackCount 
-                $tracksList
-            """.trimIndent()
+                |${playlist.name}
+                |${playlist.description}
+                |$formattedTrackCount 
+                |$tracksList
+            """.trimMargin("|")
 
                 val shareIntent = Intent().apply {
                     action = Intent.ACTION_SEND

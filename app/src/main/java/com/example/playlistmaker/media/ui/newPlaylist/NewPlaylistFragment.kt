@@ -10,6 +10,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResultLauncher
@@ -216,7 +217,9 @@ class NewPlaylistFragment : Fragment() {
         newPlaylistViewModel.saveEditPlaylist(updatedPlaylist)
     }
 
+
     private fun setImageIntoView(uri: Uri) {
+        binding.placeholderNewPlaylist.scaleType = ImageView.ScaleType.CENTER_CROP
         Glide.with(requireContext())
             .load(uri)
             .placeholder(R.drawable.placeholder)
@@ -224,6 +227,7 @@ class NewPlaylistFragment : Fragment() {
             .transform(RoundedCorners(requireContext().resources.getDimensionPixelSize(R.dimen.playlistCover_radius)))
             .into(binding.placeholderNewPlaylist)
     }
+
 
     private fun saveImageToPrivateStorage(uri: Uri): Uri {
         val filePath = File(

@@ -71,11 +71,12 @@ class PlaylistRepositoryImpl(
         }
     }
 
-
     override suspend fun getTracks(ids: List<Long>): List<Track> {
-        val allTracks = appDatabase.playlistDao().getTracks()
-        val filteredTracks = allTracks.filter { trackEntity -> ids.contains(trackEntity.trackId) }
-        return convertFromPlaylistTrackEntity(filteredTracks)
+        val tracks = mutableListOf<PlaylistTrackEntity>()
+        for (id in ids) {
+            tracks.add(appDatabase.playlistDao().getTracks(id))
+        }
+        return convertFromPlaylistTrackEntity(tracks.reversed())
     }
 
     override suspend fun getPlaylistById(playlistId: Long): Playlist? {
