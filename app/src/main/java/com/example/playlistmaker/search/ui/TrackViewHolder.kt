@@ -13,7 +13,11 @@ import java.util.Locale
 class TrackViewHolder(val binding: TrackItemBinding) :
     RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(item: Track, onItemClickListener: OnItemClickListener?) {
+    fun bind(
+        item: Track,
+        onItemClickListener: OnItemClickListener?,
+        onItemLongClickListener: OnItemLongClickListener?
+    ) {
         binding.apply {
             trackName.text = item.trackName
             artistName.text = item.artistName
@@ -30,11 +34,22 @@ class TrackViewHolder(val binding: TrackItemBinding) :
             root.setOnClickListener {
                 onItemClickListener?.onItemClick(item)
             }
+
+            root.setOnLongClickListener {
+                (onItemLongClickListener?.onItemLongClick(item) ?: false)
+
+            }
+
         }
     }
 
     fun interface OnItemClickListener {
         fun onItemClick(item: Track)
     }
+
+    fun interface OnItemLongClickListener {
+        fun onItemLongClick(item: Track): Boolean
+    }
+
 }
 

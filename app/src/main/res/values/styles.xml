@@ -87,7 +87,20 @@
         <item name="fontFamily">@font/ys_display_regular</item>
         <item name="android:textSize">12sp</item>
         <item name="android:textFontWeight">400</item>
+    </style>
 
+    <style name="OnePlaylistTextStyle">
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textSize">@dimen/one_playlist_small_text_size</item>
+        <item name="textAllCaps">false</item>
+        <item name="android:textColor">@color/Charcoal</item>
+
+    </style>
+
+    <style name="TextStyleBottomSheetMenu">
+        <item name="android:textSize">@dimen/playlist_text_size</item>
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
     </style>
 
 </resources>

@@ -168,7 +168,10 @@ class AudioPlayerFragment : Fragment() {
         })
 
         binding.bottomSheetAddButton.setOnClickListener {
-            findNavController().navigate(R.id.action_audioPlayerFragment2_to_newPlaylistFragment)
+            val direction =
+                AudioPlayerFragmentDirections.actionAudioPlayerFragment2ToNewPlaylistFragment(null)
+            findNavController().navigate(direction)
+//            findNavController().navigate(R.id.action_audioPlayerFragment2_to_newPlaylistFragment)
         }
 
 

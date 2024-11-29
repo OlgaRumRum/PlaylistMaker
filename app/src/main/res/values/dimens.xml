@@ -44,6 +44,8 @@
     <dimen name="view_height">4dp</dimen>
     <dimen name="add_to_playlist_height">52dp</dimen>
     <dimen name="playlist_text_size">16sp</dimen>
-
+    <dimen name="one_playlist_text_size">24sp</dimen>
+    <dimen name="one_playlist_small_text_size">18sp</dimen>
+    <dimen name="op_bs_margin_top">20dp</dimen>
 
 </resources>

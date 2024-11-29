@@ -62,5 +62,16 @@
     <string name="track">%d track</string>
     <string name="tracks">%d tracks</string>
 
+    <string name="share">Share</string>
+    <string name="edit_information">Edit information</string>
+    <string name="delete_playlist">Delete playlist</string>
+
+    <string name="edit_playlist">Edit playlist</string>
+    <string name="save">Save</string>
+
+    <string name="minutes">%d minutes</string>
+    <string name="minute">%d minute</string>
+    <string name="minutes_s">%d minutes</string>
+
 
 </resources>

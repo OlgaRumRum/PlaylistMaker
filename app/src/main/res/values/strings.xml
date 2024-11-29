@@ -62,5 +62,16 @@
     <string name="track">%d трек</string>
     <string name="tracks">%d треков</string>
 
+    <string name="share">Поделиться</string>
+    <string name="edit_information">Редактировать информацию</string>
+    <string name="delete_playlist">Удалить плейлист</string>
+
+    <string name="edit_playlist">Редактировать плейлист</string>
+    <string name="save">Сохранить</string>
+
+    <string name="minutes">%d минут</string>
+    <string name="minute">%d минута</string>
+    <string name="minutes_s">%d минуты</string>
+
 
 </resources>

@@ -13,19 +13,20 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface PlaylistDao {
 
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertPlaylist(playlist: PlaylistEntity)
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertPlaylistTrack(playlistTrack: PlaylistTrackEntity)
 
-
     @Query("SELECT * FROM playlists")
     suspend fun getAllPlaylists(): List<PlaylistEntity>
 
     @Query("SELECT * FROM playlists")
     fun getAllPlaylistsFlow(): Flow<List<PlaylistEntity>>
+
+    @Query("SELECT * FROM playlist_tracks_table WHERE trackId = :trackId")
+    suspend fun getTracks(trackId: Long): PlaylistTrackEntity
 
     @Query("SELECT * FROM playlists WHERE id = :playlistId")
     suspend fun getPlaylistById(playlistId: Long): PlaylistEntity?
@@ -36,5 +37,14 @@ interface PlaylistDao {
     @Update
     suspend fun updatePlaylist(playlist: PlaylistEntity)
 
+
+    @Query("DELETE FROM playlist_tracks_table WHERE trackId = :trackId")
+    suspend fun removeTrackFromPlaylist(trackId: Long)
+
+    @Query("SELECT COUNT(*) > 0 FROM playlist_tracks_table WHERE trackId = :trackId")
+    suspend fun checkTrackInOtherPlaylists(trackId: Long): Boolean
+
+    @Query("DELETE FROM playlist_tracks_table WHERE trackId = :trackId")
+    suspend fun deleteTrackById(trackId: Long)
 
 }
